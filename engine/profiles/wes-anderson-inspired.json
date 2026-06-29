@@ -1,0 +1,86 @@
+{
+  "$schema": "https://open-edit.dev/schemas/style-profile/v2.json",
+  "id": "wes-anderson-inspired-v1",
+  "display_name": "对称粉彩奇趣（韦斯·安德森风格启发）",
+  "inspiration": "受中心对称构图、粉彩高调(high-key)调色、平正正面光的奇趣手作型风格启发，非复制具名导演",
+  "pacing": {
+    "asl_seconds": 6.5,
+    "asl_distribution": "lognormal",
+    "shot_len_p10_p90_s": [2.5, 14.0],
+    "rhythm": "deliberate",
+    "music_sync": {
+      "enabled": true,
+      "snap_to": "downbeat",
+      "every_n_beats": 4,
+      "beat_tolerance_ms": 80
+    }
+  },
+  "transitions": {
+    "default": "cut",
+    "allowed": ["cut", "whip_pan", "snap_zoom", "dissolve"],
+    "rules": [
+      {
+        "when": "scene_change",
+        "use": "whip_pan",
+        "duration_ms": 300,
+        "max_per_minute": 4
+      }
+    ],
+    "ffmpeg_xfade_map": {
+      "whip_pan": "smoothleft",
+      "snap_zoom": "zoomin",
+      "dissolve": "fade"
+    }
+  },
+  "framing": {
+    "preferred_shot_scales": ["WS", "MS"],
+    "composition": "center_symmetrical",
+    "insert_cutaways": true
+  },
+  "coverage": {
+    "min_shots_per_scene": 3,
+    "remove_silence": false,
+    "match_cut_seeking": false
+  },
+  "color": {
+    "input_normalization": {
+      "auto_detect_log": true,
+      "target_space": "rec709"
+    },
+    "asc_cdl": {
+      "slope": [1.04, 1.0, 0.96],
+      "offset": [0.02, 0.01, -0.01],
+      "power": [0.95, 0.97, 1.0],
+      "saturation": 1.1
+    },
+    "creative_lut": {
+      "ref": "luts/pastel-highkey.cube",
+      "intensity": 0.6,
+      "license": "cc-by"
+    },
+    "palette_descriptor": {
+      "named_look": "pastel_highkey_warm",
+      "contrast": "low",
+      "target_skin_protect": true
+    }
+  },
+  "audio_music": {
+    "music_role": "lead",
+    "auto_duck_db": -10,
+    "normalize_lufs": -14
+  },
+  "generation_hints": {
+    "preferred_video_model": "seedance-2.0-fast",
+    "talkinghead_model": "heygen-avatar-iv",
+    "shot_prompts_style": "symmetrical centered framing, planimetric composition, flat frontal lighting, playful staging"
+  },
+  "render": {
+    "aspect_ratio": "9:16",
+    "fps": 24,
+    "codec": "h264"
+  },
+  "export": {
+    "internal_format": "otio",
+    "handoff_formats": ["fcpxml", "edl"]
+  }
+}

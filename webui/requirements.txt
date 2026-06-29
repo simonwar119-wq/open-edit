@@ -1,0 +1,3 @@
+# open-edit webui 额外依赖（生成引擎本身的依赖见 backend/）
+# 安装：  backend/.venv/bin/pip install -r webui/requirements.txt
+flask>=3.0

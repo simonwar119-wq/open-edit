@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Stable Cinemetrics</title>
+  <meta name="description" content="Stable Cinemetrics: Structured Taxonomy and Evaluation for Professional Video Generation">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.png">
+
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- Bulma -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="index.css">
+
+  <!-- Tailwind (utility classes only; preflight disabled to avoid global resets) -->
+  <script>window.tailwind=window.tailwind||{}; tailwind.config={ corePlugins:{ preflight:false } };</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* tiny helper used by the embedded qual section */
+    .hide-scrollbar::-webkit-scrollbar{display:none}
+    .hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+  </style>
+
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+  <style>
+    /* Podcast player: centered pill container */
+.podcast-audio-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.25rem;   /* center the wrapper */
+  padding: 1.25rem 1.2rem;
+  max-width: 680px;
+  background: #f3f4f6;
+  border-radius: 9999px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+.podcast-audio-wrap audio{
+  width: 100%;
+  max-width: 640px;
+  display: block;
+  margin: 0 auto;           /* centers the audio element */
+  outline: none;
+}
+
+.youtube-video-wrap {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  background: #000;
+  border-radius: 8px;
+  margin: 1.5rem auto;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+.youtube-video-wrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+    :root { --bulma-link-h-l: 21; --bulma-link-s-l: 71; }
+
+    /* Wider taxonomy box only */
+    .hero.teaser .container { max-width: min(92vw, 1400px); }
+    @media (max-width: 1280px) {
+      .hero.teaser .container { max-width: min(95vw, 1080px); }
+    }
+    
+    .tax-hint{
+  margin: .35rem 0 .75rem;
+  font-size: .875rem;          /* a bit smaller than body */
+  color: #6b7280;              /* neutral gray */
+  letter-spacing: .15px;
+  opacity: .9;                 /* soften it */
+}
+    /* --- Taxonomy Tabs: pill segmented control --- */
+    .taxonomy-tabs {
+      display: flex; justify-content: center; gap: 0;
+      margin: 1.25rem 0 0.75rem;
+    }
+    .taxonomy-tab {
+      appearance: none; border: 1px solid #d6d6d6; background: #ffffff; color: #333;
+      font-weight: 600; font-size: 0.95rem; letter-spacing: .2px;
+      padding: .55rem 1.15rem; cursor: pointer;
+      transition: background .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease;
+      line-height: 1; user-select: none;
+    }
+    .taxonomy-tab:first-child { border-radius: 9999px 0 0 9999px; }
+    .taxonomy-tab:last-child  { border-radius: 0 9999px 9999px 0; }
+    .taxonomy-tab + .taxonomy-tab { margin-left: -1px; }
+    .taxonomy-tab:hover { background: #f6f8ff; border-color: #c7d2fe; }
+    .taxonomy-tab:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(50,115,220,.25); border-color: #3273dc; }
+    .taxonomy-tab.is-active,
+    .taxonomy-tab[aria-selected="true"] {
+      background: linear-gradient(180deg, #3d7bfd 0%, #2f66e1 100%);
+      color: #fff; border-color: #2f66e1;
+      box-shadow: 0 6px 14px rgba(47,102,225,.18), inset 0 0 0 1px rgba(255,255,255,.25);
+    }
+    .taxonomy-tab:disabled { opacity: .55; cursor: not-allowed; }
+
+    /* Hide Swiper arrows on taxonomy carousel */
+    .hero.teaser .swiper-button-prev,
+    .hero.teaser .swiper-button-next { display: none !important; }
+
+    .hero.teaser .swiper,
+.hero.teaser .swiper-wrapper,
+.hero.teaser .swiper-slide{
+  min-height: 0;                         /* Safari/Chrome flex scrolling fix */
+}
+    /* ===== Consistent hero title + authors across breakpoints ===== */
+.title.is-1.publication-title{
+  font-size: clamp(2.2rem, 2.1vw + 1.4rem, 3rem) !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
+  margin-bottom: 0.75rem !important;
+}
+.scine-title,
+.scine-subtitle{
+  display: block;
+}
+.scine-subtitle{
+  font-weight: 400 !important;
+  color: #3b3b3b;
+  margin-top: .15rem;
+}
+  /* Two-row, tidy pills for Positive Cases */
+.taxonomy-tabs--2rows{
+  display: grid;                      /* instead of flex */
+  grid-template-columns: repeat(5, max-content); /* 10 cats -> 2 rows of 5 */
+  justify-content: center;
+  gap: .5rem .6rem;
+  margin-top: .75rem;
+  padding: .25rem 0;
+}
+
+.taxonomy-tabs--2rows .taxonomy-tab{
+  flex: none;                   /* no stretching */
+  white-space: nowrap;          /* keep labels intact */
+  padding: .5rem .9rem;         /* slightly smaller than main tabs */
+  font-size: .95rem;
+  border-radius: 9999px;        /* always pill */
+}
+
+/* Tablet: allow 4 per row */
+@media (max-width: 1024px){
+  .taxonomy-tabs--2rows{
+    grid-template-columns: repeat(4, max-content);
+  }
+}
+/* Mobile: let them auto-wrap; center */
+@media (max-width: 640px){
+  .taxonomy-tabs--2rows{
+    grid-template-columns: repeat(2, 1fr); /* two per row, equal width */
+    gap: .5rem;
+  }
+  .taxonomy-tabs--2rows .taxonomy-tab{
+    justify-self: center;       /* keep pills centered in each cell */
+    width: max-content;
+  }
+}
+
+
+/* Hide sidebar ToC while hero is in view (desktop only) */
+#page-toc.toc-hidden{
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+
+/* Authors */
+.author-line{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .35rem .6rem;
+  font-size: 1.05rem;
+  color: #2f2f2f;
+  margin-top: .75rem;
+}
+.author-line a{ color:#2f2f2f; text-decoration:none; }
+.author-line a:hover{ text-decoration:underline; }
+.author-line .sep{ display:none; }   /* prevents awkward separators on wrap */
+
+/* Affiliations */
+.affil-line{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .35rem .6rem;
+  color: #555;
+  font-size: .95rem;
+  margin-top: .75rem;
+}
+.affil-line .bullet{ display:none; } /* optional: hide bullets for clean wraps */
+
+.sup{ vertical-align: super; font-size: .65em; margin-left: .15em; }
+
+
+    /* Base typography / canvas */
+    body { background: #f5f5f7; line-height: 1.6; font-family: 'Noto Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .hero .title, .publication-title, .publication-authors { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+    /* White card sections */
+    .section-box {
+      background: #ffffff; max-width: 980px; margin: 4rem auto; padding: 3rem 4rem;
+      border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .hero.teaser .tree-controls {
+      position: absolute; top: 6px; right: 8px; z-index: 10;
+      background: rgba(255,255,255,.95); border-radius: 10px; padding: 4px;
+      box-shadow: 0 3px 10px rgba(0,0,0,.08); display: inline-flex; gap: .5rem;
+    }
+    .hero.teaser .btn-tax { padding: .3rem .6rem; }
+    .btn-tax{ background:#fff; border:1px solid #d9d9d9; border-radius:8px; padding:.35rem .7rem; font-size:.9rem; font-weight:600; cursor:pointer; transition:box-shadow .15s ease,border-color .15s ease,background .15s ease; }
+    .btn-tax:hover{ border-color:#b9c7ff; box-shadow:0 3px 10px rgba(50,115,220,.12); }
+    .btn-expand{ background:linear-gradient(180deg,#3d7bfd,#2f66e1); color:#fff; border-color:#2f66e1; }
+
+    .publication-authors { margin: 1rem auto; }
+    .publication-venue { color: #555; font-size: 1rem; font-weight: 700; }
+    .section { padding: 3rem 1.5rem; }
+    .hero.teaser { background-color: #f5f5f5; }
+    .hero .subtitle { color: #555; }
+    .content p { line-height: 1.5; }
+
+    /* Swiper slide card look */
+    .swiper-slide {
+      background: #fff; border: 1px solid #ddd; border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 15px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start; box-sizing: border-box;
+    }
+
+    /* Taxonomy wrapper: allow both scrollbars; center small content */
+.hero.teaser .tree-container-wrapper{
+  position: relative;
+  display: flex;                 /* enables visual centering when no overflow */
+  justify-content: center;       /* will be toggled to flex-start by JS when overflowing */
+  align-items: center;           /* will be toggled to flex-start by JS when overflowing */
+  overflow: auto !important;     /* both axes when needed */
+  width: 100%;
+  min-height: 260px;
+  height: min(60vh, 520px); 
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 12px 16px;
+  scrollbar-gutter: stable both-edges;
+}
+
+/* Let the SVG size itself; it must not be constrained by the container */
+.hero.teaser .tree-container-wrapper .tree-svg{
+  display: block;
+  max-width: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* make SVG keep its intrinsic size as a flex item */
+.hero.teaser .tree-container-wrapper .tree-svg{
+  flex: 0 0 auto;               /* ⬅️ prevents flex-shrink */
+}
+
+/* help touch scrolling on iOS/Android */
+.hero.teaser .tree-container-wrapper{
+  touch-action: pan-x pan-y;     /* allow native touch panning */
+}
+
+
+/* Make sure Swiper doesn't clip the wrapper's scrollbars/content */
+.hero.teaser .mySwiper .swiper-slide{
+  overflow: visible !important;
+}
+
+
+    /* Prevent double-smooth (we'll control it in JS) */
+    html { scroll-behavior: auto !important; }
+
+
+    .graph-title { font-size: 1.25rem; font-weight: bold; color: #363636; margin-bottom: 10px; text-align: center; flex: 0 0 auto; }
+
+
+    .tax-scroll-btn { position: absolute; top: 50%; transform: translateY(-50%); border: 1px solid #d9d9d9; background: rgba(255,255,255,.95); border-radius: 9999px; padding: .35rem .55rem; font-weight: 700; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.08); z-index: 5; }
+    .tax-scroll-btn.left  { left: 8px; }
+    .tax-scroll-btn.right { right: 8px; }
+    .tax-scroll-btn[hidden] { display: none; }
+
+    .hero.teaser .tree-svg { display: block; }
+    .link { fill: none; stroke: #ccc; stroke-width: 2px; }
+    .node circle { stroke: steelblue; stroke-width: 3px; cursor: pointer; fill: #fff; }
+    .node text { font: 12px sans-serif; cursor: pointer; }
+    .toggle-text { font-size: 12px; fill: #2563eb; cursor: pointer; text-anchor: start; text-decoration: underline; }
+
+    .tooltip { position: fixed; visibility: hidden; background-color: #ffffff; border: 1px solid #ccc; border-radius: 6px; padding: 10px; font-size: 12px; color: #333; box-shadow: 0 3px 8px rgba(0,0,0,0.15); max-width: 260px; pointer-events: none; z-index: 100; }
+
+    /* Other swipers (figures/videos) no card */
+    .human-eval-swiper .swiper-slide,
+    .video-results-swiper .swiper-slide { background: transparent; border: none; box-shadow: none; height: auto; }
+    .human-eval-swiper .caption,
+    .video-results-swiper .caption { margin-top: 0.5rem; font-style: italic; color: #555; }
+    .video-results-swiper video { max-width: 100%; height: auto; border-radius: 8px; }
+
+    .caption--simple { margin-top: .25rem; font-weight: 600; text-align: center;}
+    .caption--breadcrumb { margin-top: .1rem; font-size: .9rem; color: #777; }
+    .caption--breadcrumb .divider { margin: 0 .35rem; opacity: .6; }
+
+    /* ===== ToC (top-left) ===== */
+    #page-toc {
+      position: fixed;
+      top: clamp(130px, 14vh, 220px);             
+      left: 12px;
+      width: 200px;
+      z-index: 50;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.06);
+      padding: 10px 10px 8px;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    #page-toc h4 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111827;
+    }
+    #page-toc ul { list-style: none; margin: 0; padding: 0; }
+    #page-toc li { margin: 4px 0; }
+    #page-toc a {
+      display: block;
+      padding: 6px 8px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.92rem;
+      color: #374151;
+      transition: background .15s ease, color .15s ease;
+    }
+    #page-toc a:hover { background: #f3f4f6; }
+    #page-toc a.is-active {
+      background: linear-gradient(180deg, #3d7bfd 0%, #2f66e1 100%);
+      color: #fff;
+    }
+
+    /* Show/hide button for small screens */
+    #toc-toggle { display: none; }
+
+    @media (max-width: 1280px){
+  /* Hide sidebar ToC on small/medium screens */
+  #page-toc{ display: none; }
+
+  /* Show a floating action button to open ToC */
+  #toc-toggle{
+    display: inline-flex;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 60;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  }
+
+  /* When opened via JS, present ToC as a bottom sheet panel */
+  #page-toc.is-mobile-panel{
+    display: block;
+    position: fixed;
+    left: 0; right: 0;
+    bottom: 0;
+    top: auto;
+    width: auto;
+    max-height: 55vh;
+    overflow: auto;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 -10px 24px rgba(0,0,0,.16);
+    padding: 12px 14px 10px;
+    z-index: 70;
+  }
+  #page-toc.is-mobile-panel h4{ margin-bottom: 8px; }
+  #page-toc.is-mobile-panel a{ padding: 10px 10px; }
+}
+
+
+    /* Smooth anchor position when scrolled (avoids heading underlap) */
+    section, .hero { scroll-margin-top: 90px; }
+
+  </style>
+</head>
+<body>
+
+  <button id="toc-toggle" aria-expanded="false" aria-controls="page-toc">☰ Sections</button>
+  <nav id="page-toc" aria-label="Table of contents">
+    <h4>On this page</h4>
+    <ul id="page-toc-list"></ul>
+  </nav>
+
+  <!-- HERO HEADER -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+
+            <h1 class="title is-1 publication-title">
+              <span class="scine-title">Stable Cinemetrics:</span>
+              <span class="scine-subtitle">Structured Taxonomy and Evaluation for Professional Video Generation</span>
+            </h1>
+
+            <div class="author-line">
+              <a href="https://agneetchatterjee.com/" target="_blank">Agneet Chatterjee</a><span class="sup">1,2</span>
+              <span class="sep">·</span>
+              <a href="https://rahimentezari.github.io/" target="_blank">Rahim Entezari</a><span class="sup">1</span>
+              <span class="sep">·</span>
+              <a href="https://scholar.google.com/citations?user=BLXPkDEAAAAJ&hl=en" target="_blank">Maksym Zhuravinskyi</a><span class="sup">1</span>
+              <span class="sep">·</span>
+              <a href="https://scholar.google.com/citations?user=axpNZUAAAAAJ&hl=en" target="_blank">Max Lapin</a><span class="sup">1</span>
+              <span class="sep">·</span>
+              <a href="https://reshinthadithyan.github.io/" target="_blank">Reshinth Adithyan</a><span class="sup">1</span>
+              <span class="sep">·</span>
+              <a href="https://scholar.google.com/citations?user=JVumcGEAAAAJ&hl=en" target="_blank">Amit Raj</a><span class="sup">3</span>
+              <span class="sep">·</span>
+              <a href="https://www.public.asu.edu/~cbaral/" target="_blank">Chitta Baral</a><span class="sup">2</span>
+              <span class="sep">·</span>
+              <a href="https://yezhouyang.engineering.asu.edu/" target="_blank">Yezhou Yang</a><span class="sup">2</span>
+              <span class="sep">·</span>
+              <a href="https://varunjampani.github.io" target="_blank">Varun Jampani</a><span class="sup">1</span>
+            </div>
+
+            <div class="affil-line">
+              <span class="sup">1</span> Stability AI
+              <span class="bullet">•</span>
+              <span class="sup">2</span> Arizona State University
+              <span class="bullet">•</span>
+              <span class="sup">3</span> Google DeepMind
+            </div>
+
+          <br>
+          <div class="buttons is-centered" style="gap:.5rem">
+          <!-- Paper (PDF)
+          <a href="assets/Stable_Cinemetrics.pdf" class="button is-dark is-rounded"
+            target="_blank" rel="noopener" aria-label="Open PDF">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span>
+            <span>Paper</span>
+          </a> -->
+
+          <!-- arXiv -->
+          <a href="https://arxiv.org/abs/2509.26555" class="button is-dark is-rounded"
+            target="_blank" rel="noopener" aria-label="Open arXiv">
+            <span class="icon"><i class="ai ai-arxiv"></i></span>
+            <span>arXiv</span>
+          </a>
+
+          <!-- Video -->
+          <a href="#video-overview" class="button is-dark is-rounded" aria-label="Watch embedded video">
+            <span class="icon"><i class="fab fa-youtube"></i></span>
+            <span>Video</span>
+          </a>
+
+          <a href="#podcast" class="button is-dark is-rounded" aria-label="Open podcast section">
+          <span class="icon"><i class="fas fa-podcast"></i></span>
+          <span>Podcast</span>
+          </a>
+        </div>
+
+        <!-- Podcast (jumps to the section below) -->
+
+
+
+        <p class="publication-venue has-text-centered is-size-4" style="margin-top:.5rem;">
+          NeurIPS 2025
+        </p>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO TEASER (Taxonomies) -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <h4 class="title is-4 has-text-centered">
+          <em>Structured taxonomies at the intersection of Generative Video Models and Professional Use, built on the principles of cinematic control.</em>
+        </h4>
+        
+        <p class="tax-hint has-text-centered">
+          <span class="is-hidden-touch">Hover over nodes for details</span>
+          <span class="is-hidden-desktop">Desktop recommended • Tap nodes for details</span>
+        </p>
+
+
+
+        <!-- MAIN TAXONOMY TABS (these control Swiper) -->
+        <div class="taxonomy-tabs has-text-centered" role="tablist" aria-label="Taxonomies">
+          <button class="taxonomy-tab" role="tab" aria-selected="true"  data-slide="0">Camera</button>
+          <button class="taxonomy-tab" role="tab" aria-selected="false" data-slide="1">Lighting</button>
+          <button class="taxonomy-tab" role="tab" aria-selected="false" data-slide="2">Setup</button>
+          <button class="taxonomy-tab" role="tab" aria-selected="false" data-slide="3">Events</button>
+        </div>
+
+        <!-- ===== Carousel starts ===== -->
+        <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+            <!-- Slide 2: Camera Graph -->
+            <div class="swiper-slide">
+              <h3 class="graph-title"></h3>
+              <div class="tree-controls">
+                <button class="btn-tax btn-collapse" data-target="tree-container-2">Collapse</button>
+                <button class="btn-tax btn-expand"  data-target="tree-container-2">Expand</button>
+              </div>
+              <div class="tree-container-wrapper">
+                <svg id="tree-container-2" class="tree-svg"></svg>
+              </div>
+            </div>
+
+            <!-- Slide 3: Lighting Graph -->
+            <div class="swiper-slide">
+              <h3 class="graph-title"></h3>
+              <div class="tree-controls">
+                <button class="btn-tax btn-collapse" data-target="tree-container-3">Collapse</button>
+                <button class="btn-tax btn-expand"  data-target="tree-container-3">Expand</button>
+              </div>
+              <div class="tree-container-wrapper">
+                <svg id="tree-container-3" class="tree-svg"></svg>
+              </div>
+            </div>
+
+            <!-- Slide 1: Setup Graph -->
+            <div class="swiper-slide">
+              <h3 class="graph-title"></h3>
+              <div class="tree-controls">
+                <button class="btn-tax btn-collapse" data-target="tree-container-1">Collapse</button>
+                <button class="btn-tax btn-expand"  data-target="tree-container-1">Expand</button>
+              </div>
+              <div class="tree-container-wrapper">
+                <svg id="tree-container-1" class="tree-svg"></svg>
+              </div>
+            </div>
+
+            <!-- Slide 4: Events Graph -->
+            <div class="swiper-slide">
+              <h3 class="graph-title"></h3>
+              <div class="tree-controls">
+                <button class="btn-tax btn-collapse" data-target="tree-container-4">Collapse</button>
+                <button class="btn-tax btn-expand"  data-target="tree-container-4">Expand</button>
+              </div>
+              <div class="tree-container-wrapper">
+                <svg id="tree-container-4" class="tree-svg"></svg>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+        <!-- ===== Carousel ends ===== -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Paper abstract -->
+  <section class="section section-box" id="abstract">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>Recent advances in video generation have enabled high-fidelity video synthesis from user provided prompts. However, existing models and benchmarks fail to capture the complexity and requirements of professional video generation. Towards that goal, we introduce Stable Cinemetrics, a structured evaluation framework that formalizes filmmaking controls into four disentangled, hierarchical taxonomies: Setup, Event, Lighting, and Camera. Together, these taxonomies define 76 fine-grained control nodes grounded in industry practices. Using these taxonomies, we construct a benchmark of prompts aligned with professional use cases and develop an automated pipeline for prompt categorization and question generation, enabling independent evaluation of each control dimension. We conduct a large-scale human study spanning 10+ models and 20K videos, annotated by a pool of 80+ film professionals. Our analysis, both coarse and fine-grained reveal that even the strongest current models exhibit significant gaps, particularly in Events and Camera-related controls. To enable scalable evaluation, we train an automatic evaluator, a vision-language model aligned with expert annotations that outperforms existing zero-shot baselines. SCINE is the first approach to situate professional video generation within the landscape of video generative models, introducing taxonomies centered around cinematic controls and supporting them with structured evaluation pipelines and detailed analyses to guide future research.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benchmark -->
+  <section class="section section-box" id="benchmark">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths has-text-centered">
+          <h2 class="title is-3">The Stable Cinemetrics Benchmark</h2>
+          <div class="content has-text-justified">
+            <p class="is-size-5" style="margin-bottom:1.25rem;">To reflect real world professional workflows, we develop SCINE Scripts and Visuals by sampling control nodes from our defined taxonomies.</p>
+          </div>
+          <div class="column">
+            <img src="assets/images/pipeline.png" alt="Overall Pipeline" loading="lazy">
+          </div>
+
+          <div class="content has-text-justified">
+            <p class="is-size-5" style="margin-bottom:1.25rem;">In SCINE prompts, each control node is categorized, and specific questions are generated for every node, enabling focused and independent evaluation of each cinematic aspect.</p>
+          </div>
+
+          <!-- NEW: Independent image toggle tabs -->
+          <div class="taxonomy-tabs has-text-centered" id="category-tabs" role="tablist" aria-label="Category figures">
+            <button class="taxonomy-tab is-active" role="tab" aria-selected="true"
+                    data-image="assets/images/categories/camera_lighting.png">
+              Camera &amp; Lighting
+            </button>
+            <button class="taxonomy-tab" role="tab" aria-selected="false"
+                    data-image="assets/images/categories/setup.png">
+              Setup
+            </button>
+            <button class="taxonomy-tab" role="tab" aria-selected="false"
+                    data-image="assets/images/categories/events.png">
+              Events
+            </button>
+            <button class="taxonomy-tab" role="tab" aria-selected="false"
+                    data-image="assets/images/categories/all.png">
+              All
+            </button>
+          </div>
+
+          <div class="column">
+            <img id="category-image"
+                 src="assets/images/categories/camera_lighting.png"
+                 alt="Categories and Questions"
+                 loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- ===================== QUALITATIVE (NEW) ===================== -->
+<section class="section section-box" id="qualitative">
+  <div class="md:ml-0 p-0 space-y-20">
+
+    <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
+
+    <!-- ═══════════════════ SCINE Scripts ═══════════════════ -->
+    <section id="scine-scripts" class="space-y-6">
+      <h2 class="title is-4 has-text-centered">SCINE Scripts</h2>
+      <p id="desc-scripts" class="max-w-3xl mx-auto has-text-centered has-text-grey"></p>
+
+      <div class="w-full max-w-6xl mx-auto is-flex is-justify-content-space-between is-align-items-center">
+        <button id="prevBtn" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition text-sm md:text-base">⟵ Prev</button>
+        <button id="nextBtn" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition text-sm md:text-base">Next ⟶</button>
+      </div>
+
+      <div id="carousel-wrapper" class="w-full max-w-6xl mx-auto min-h-[14rem] is-flex is-align-items-center is-justify-content-center"></div>
+      <div id="promptBox" class="max-w-5xl mx-auto is-size-5 has-text-centered"></div>
+    </section>
+
+    <!-- ═══════════════════ SCINE Visuals ═══════════════════ -->
+    <section id="scine-visuals" class="space-y-6">
+      <h2 class="title is-4 has-text-centered">SCINE Visuals</h2>
+      <p id="desc-visuals" class="max-w-3xl mx-auto has-text-centered has-text-grey"></p>
+
+      <div class="w-full max-w-6xl mx-auto is-flex is-justify-content-space-between is-align-items-center">
+        <button id="prevVisBtn" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition text-sm md:text-base">⟵ Prev</button>
+        <button id="nextVisBtn" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition text-sm md:text-base">Next ⟶</button>
+      </div>
+
+      <div id="visuals-carousel-wrapper" class="w-full max-w-6xl mx-auto min-h-[14rem] is-flex is-align-items-center is-justify-content-center"></div>
+      <div id="visuals-promptBox" class="max-w-5xl mx-auto is-size-5 has-text-centered"></div>
+    </section>
+
+    <!-- ═══════════ Pairwise Model Comparisons ═══════════ -->
+
+    <section id="pairwise" class="space-y-6">
+      <h2 class="title is-4 has-text-centered">Pairwise Model Comparisons</h2>
+      <p id="desc-pairwise" class="max-w-3xl mx-auto has-text-centered has-text-grey"></p>
+
+      <div class="w-full max-w-6xl mx-auto is-flex is-justify-content-space-between is-align-items-center">
+        <button id="prevPair" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition text-sm md:text-base">⟵ Prev</button>
+        <button id="nextPair" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition text-sm md:text-base">Next ⟶</button>
+      </div>
+
+      <div id="pair-wrapper" class="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-2"></div>
+      <p id="pair-prompt" class="max-w-5xl mx-auto is-size-5 has-text-centered"></p>
+
+      <details id="pair-meta" class="max-w-6xl mx-auto bg-gray-50 border border-gray-200 p-4 rounded">
+        <summary class="cursor-pointer is-family-sans-serif is-size-6 has-text-weight-semibold select-none">
+          Show Metadata (Question, Categories and Scores)
+        </summary>
+        <div class="mt-3 overflow-x-auto" id="pair-meta-body"></div>
+      </details>
+    </section>
+
+    <!-- ═══════════ Positive Cases by Taxonomy Nodes ═══════════ -->
+    <section id="pos-taxonomy" class="space-y-6">
+      
+      <h2 class="title is-4 has-text-centered">Positive Cases by Taxonomy Nodes</h2>
+       <div id="pos-cats"
+     class="taxonomy-tabs taxonomy-tabs--2rows"
+     role="tablist"
+     aria-label="Taxonomy categories"></div>
+
+      <!-- 3-up video grid -->
+      <div id="pos-grid" class="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+    </section>
+
+    </div>
+  </section>
+
+  <!-- Quantitative Results -->
+  <section class="section section-box" id="quantitative">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths has-text-centered">
+          <h2 class="title is-3">Quantitative Results</h2>
+          <!-- Quant figures navigator -->
+          <div id="quant-nav"
+              class="taxonomy-tabs taxonomy-tabs--2rows"
+              role="tablist"
+              aria-label="Quantitative figures">
+          </div>
+
+          <!-- One figure that we swap by button -->
+          <figure id="quant-figure" class="image" style="margin-top:1rem;">
+            <img id="quant-img" src="" alt="" loading="lazy" />
+            <figcaption id="quant-cap" class="caption" style="text-align:center;"></figcaption>
+          </figure>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- VLM Evals -->
+  <section class="section section-box" id="vlm">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths has-text-centered">
+          <h2 class="title is-3">Automatic Evaluation of Professional Videos</h2>
+          <div class="content has-text-justified">
+            <p class="is-size-5" style="margin-bottom:1.25rem;">Our Vision-Language Model surpasses baseline models in alignment with expert annotations for evaluating professional video generation.</p>
+          </div>
+          <div class="column">
+            <img src="assets/images/vlm.png" alt="Automatic Evaluation Graph" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-box" id="video-overview">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <h2 class="title is-3">Video Overview</h2>
+        <p class="is-size-5 has-text-centered" style="margin-bottom:1.25rem;">
+          Watch a summary of the paper and its key contributions.
+        </p>
+        <div class="youtube-video-wrap">
+          <iframe src="https://www.youtube.com/embed/jJ4qwSK3t-8"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <p class="has-text-grey is-size-6" style="margin-top:.5rem;">
+          Prefer to watch on YouTube? <a href="https://www.youtube.com/watch?v=jJ4qwSK3t-8" target="_blank" rel="noopener">Open in a new tab</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Podcast -->
+<section class="section section-box" id="podcast">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <h2 class="title is-3">Podcast</h2>
+
+        <!-- Rounded audio player container -->
+        <p class="is-size-5 has-text-centered" style="margin-bottom:1.25rem;">
+  Prefer listening? Get the key ideas in this short podcast overview of the paper.
+</p>
+
+<div class="podcast-audio-wrap">
+  <audio controls preload="metadata">
+    <source src="assets/podcast.mp4" type="audio/mp4">
+    Your browser does not support the audio element.
+  </audio>
+</div>
+
+
+        <p class="has-text-grey is-size-6" style="margin-top:.5rem;">
+          Prefer offline? <a href="assets/podcast.mp4" download>Download the episode</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Ack -->
+  <section class="section section-box" id="ack">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths has-text-centered">
+          <h2 class="title is-3">Acknowledgements</h2>
+          <div class="content has-text-justified">
+            <p class="is-size-5" style="margin-bottom:1.25rem;">We thank Robert Legato, Hanno Basse and Heather Ferreira for their valuable input on our work. We are also grateful to the team at MovieLabs for their feedback on our taxonomies. A special thanks to Cedric Wagrez for his assistance with the human annotations! </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BibTeX -->
+<section class="section section-box" id="bibtex">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">BibTeX</h2>
+
+        <div class="is-flex is-justify-content-flex-end">
+          <button id="copy-bibtex" class="button is-light is-small">
+            Copy
+          </button>
+        </div>
+
+        <pre id="bibtex-entry" class="has-background-light p-3" style="white-space:pre; overflow:auto;"><code>@misc{chatterjee2025stablecinemetricsstructured,
+      title={Stable Cinemetrics : Structured Taxonomy and Evaluation for Professional Video Generation}, 
+      author={Agneet Chatterjee and Rahim Entezari and Maksym Zhuravinskyi and Maksim Lapin and Reshinth Adithyan and Amit Raj and Chitta Baral and Yezhou Yang and Varun Jampani},
+      year={2025},
+      eprint={2509.26555},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2509.26555}, 
+}</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic-project-page-template</a>. You are free to borrow this website, we just ask that you link back to this page in the footer. This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- D3 + Swiper -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+// Base folder for all PNGs
+const QUANT_BASE = 'assets/images/quant_results/';
+
+// List every result you want to expose here
+const QUANT_ITEMS = [
+  { key: 'elo',            file: 'elo.png',
+    label: 'Model ELO Rankings',
+    cap: 'ELO rankings of models across the 4 taxonomy pillars.' },
+
+  { key: 'scripts',        file: 'scine_scripts.png',
+    label: 'SCINE Scripts (Overall)',
+    cap: 'Overall results on SCINE Scripts. Minimax and Wan 14B emerge as the strongest models.' },
+
+  { key: 'visuals',        file: 'scine_visuals.png',
+    label: 'SCINE Visuals (Overall)',
+    cap: 'Overall results on SCINE Visuals. Models perform better at Setup and Lighting in comparison to Events and Camera.' },
+
+  { key: 'events_actions', file: 'events_actions.png',
+    label: 'Actions',
+    cap: 'Atomic actions are handled better than causal and overlapping actions.' },
+
+  { key: 'emotions',       file: 'emotions.png',
+    label: 'Emotions',
+    cap: 'Implicit emotions outperform explicit ones; Remorse is strongest, Aggressiveness is most challenging.' },
+
+  { key: 'lighting_camera', file: 'lighting_camera.png',
+    label: 'Lighting & Camera',
+    cap: 'Lighting Position and Advanced Controls remain a bottleneck' },
+
+  { key: 'camera_angle',   file: 'camera_angle.png',
+    label: 'Camera Angle',
+    cap: 'The Dutch angle is a common failure case across models.' },
+
+  { key: 'cine_shot_size',   file: 'cine_shot_size.png',
+    label: 'Camera Shot Size',
+    cap: 'Models perform well on Master and Establishing shots and struggle at medium-wide and extreme-close-up shots.' },
+
+    { key: 'time_of_day',   file: 'time_of_day.png',
+    label: 'Time of Day',
+    cap: 'Across Time of Day setups, Sunrise shots are handled better, while Afternoon remains more challenging for models.' },
+
+    { key: 'genres',   file: 'genres.png',
+    label: 'Genres',
+    cap: 'Portrayal of Events in Biography and Adventure are the strongest, while Comedy and Horror are the weakest.' },
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('quant-nav');
+  const img = document.getElementById('quant-img');
+  const cap = document.getElementById('quant-cap');
+
+  if (!nav || !img || !cap) return;
+
+  // Build pills
+  nav.innerHTML = QUANT_ITEMS.map((it, i) => `
+    <button class="taxonomy-tab${i===0 ? ' is-active':''}"
+            role="tab"
+            aria-selected="${i===0 ? 'true':'false'}"
+            data-key="${it.key}">
+      ${it.label}
+    </button>
+  `).join('');
+
+  // Render helper
+  function showItem(key){
+    const it = QUANT_ITEMS.find(x => x.key === key) || QUANT_ITEMS[0];
+    img.src = QUANT_BASE + it.file;
+    img.alt = it.label;
+    cap.textContent = it.cap || '';
+  }
+
+  // Default: first item
+  showItem(QUANT_ITEMS[0].key);
+
+  // Click handling + aria states
+  nav.addEventListener('click', (e) => {
+    const btn = e.target.closest('.taxonomy-tab[data-key]');
+    if (!btn) return;
+
+    [...nav.querySelectorAll('.taxonomy-tab')].forEach(b => {
+      const active = b === btn;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+
+    showItem(btn.dataset.key);
+  });
+});
+</script>
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn  = document.getElementById('copy-bibtex');
+  const pre  = document.getElementById('bibtex-entry');
+  if (!btn || !pre) return;
+
+  btn.addEventListener('click', async () => {
+    const text = pre.innerText;
+    try {
+      await navigator.clipboard.writeText(text);
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => (btn.textContent = old), 1200);
+    } catch {
+      // Fallback
+      const sel = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(pre);
+      sel.removeAllRanges(); sel.addRange(range);
+      document.execCommand('copy');
+      sel.removeAllRanges();
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => (btn.textContent = old), 1200);
+    }
+  });
+});
+</script>
+
+  <script>
+/* -------------------------------------------------------------
+   0.  Helpers
+----------------------------------------------------------------*/
+function debounce (fn, ms=150){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms);} }
+let __nodeIdCounter = 0;
+
+const TREE_REGISTRY = {}; // svgId -> { root, update, expandAll, collapseToLevel }
+
+function attachHorizontalScrollButtons(wrapper){
+  let left = wrapper.querySelector('.tax-scroll-btn.left');
+  let right = wrapper.querySelector('.tax-scroll-btn.right');
+  if (!left) { left = document.createElement('button'); left.className = 'tax-scroll-btn left'; left.textContent = '◀'; wrapper.appendChild(left); }
+  if (!right){ right = document.createElement('button'); right.className = 'tax-scroll-btn right'; right.textContent = '▶'; wrapper.appendChild(right); }
+
+  const updateVisibility = () => {
+    const { scrollWidth, clientWidth, scrollLeft } = wrapper;
+    const overflow = scrollWidth > clientWidth + 2;
+    left.hidden  = !overflow || scrollLeft <= 0;
+    right.hidden = !overflow || scrollLeft + clientWidth >= scrollWidth - 1;
+  };
+
+  const nudge = (dir) => wrapper.scrollBy({ left: dir * Math.round(wrapper.clientWidth * 0.8), behavior: 'smooth' });
+  left.onclick  = () => nudge(-1);
+  right.onclick = () => nudge(1);
+
+  wrapper.addEventListener('scroll', updateVisibility, { passive: true });
+  window.addEventListener('resize', debounce(updateVisibility, 150));
+  updateVisibility();
+}
+
+function buildTreeForIndex(idx){
+  const idByIndex = ['tree-container-2','tree-container-3','tree-container-1','tree-container-4'];
+  const dataByIndex = [data2, data3, data1, data4];
+
+  const id = idByIndex[idx]; const data = dataByIndex[idx];
+  if (!id) return;
+  drawTree(id, data);
+  requestAnimationFrame(() => {
+  taxonomySwiper?.updateSize();
+  taxonomySwiper?.updateSlides();
+});
+  const wrapper = document.getElementById(id).closest('.tree-container-wrapper');
+  // attachHorizontalScrollButtons(wrapper);
+}
+
+function capFirst(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+function drawTree (svgId, treeData){
+  const svg     = d3.select('#'+svgId).html('');
+
+  const _wrap = document.getElementById(svgId)?.closest('.tree-container-wrapper');
+  if (_wrap) delete _wrap.dataset.centered;
+
+  const tooltip = d3.select('#tooltip');
+
+  // compact defaults
+  const FONT_PX  = 12;
+  const CIRCLE_R = 5;
+  const LINK_W   = 1;
+  const BASE_X   = 160;
+  const BASE_Y   = 24;
+
+  const margin = { top: 24, right: 70, bottom: 24, left: 140 };
+
+  // canvas to measure text widths
+  const ctx = document.createElement('canvas').getContext('2d');
+  ctx.font = `${FONT_PX}px sans-serif`;
+
+  const root = d3.hierarchy(treeData);
+  collapseToLevel(root, 1);
+  root.x0 = 0; root.y0 = 0;
+
+  svg.attr('width',  10 + margin.left + margin.right)
+     .attr('height', 10 + margin.top  + margin.bottom);
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const tree = d3.tree().separation((a,b)=> (a.parent===b.parent ? 1 : 1.25));
+
+  update(root);
+
+  function update(source){
+    // visible nodes only (collapsed ones live in _children)
+    const visNodes = root.descendants();
+    const visLinks = root.links();
+
+    const maxDepth = d3.max(visNodes, d => d.depth) || 0;
+
+    const depthCounts = {};
+    visNodes.forEach(d => { depthCounts[d.depth] = (depthCounts[d.depth]||0)+1; });
+    const maxRows = d3.max(Object.values(depthCounts)) || 1;
+
+    const visibleCount = visNodes.length;
+    const yStep = Math.round(BASE_Y * (visibleCount > 28 ? 1.2 : 1.0));
+    const xStep = Math.round(BASE_X * 0.70); // compact horizontally
+
+    const innerTreeWidth   = Math.max((maxDepth + 1) * xStep, 320);
+    const provisionalHeight= Math.max(140, (maxRows - 1) * yStep + 60);
+
+    // run layout
+    tree.size([provisionalHeight, innerTreeWidth]);
+    tree(root);
+
+    // tighten canvas to actual spread
+    const maxLabelPx  = d3.max(visNodes, d => ctx.measureText(d.data?.name || '').width) || 80;
+    const RIGHT_GUTTER= Math.ceil(6*2 + 12 + maxLabelPx) + 60;
+
+    const xExtent = d3.extent(visNodes, d => d.x);
+    const yExtent = d3.extent(visNodes, d => d.y);
+    const minX = xExtent[0] ?? 0, maxX = xExtent[1] ?? 0;
+    const maxY = yExtent[1] ?? 0;
+
+    const PAD_Y = 24;
+    const height = Math.ceil((maxX - minX) + PAD_Y*2);
+    const width  = Math.ceil(maxY + RIGHT_GUTTER);
+
+    svg.attr('width',  width  + margin.left + margin.right)
+       .attr('height', height + margin.top  + margin.bottom);
+
+// after svg.attr('width'...).attr('height'...) inside update()
+const wrapperEl = document.getElementById(svgId)?.closest('.tree-container-wrapper');
+if (wrapperEl) {
+  const svgW  = width  + margin.left + margin.right;
+  const svgH  = height + margin.top  + margin.bottom;
+  const wrapW = wrapperEl.clientWidth;
+  const wrapH = wrapperEl.clientHeight;
+
+  const overflowsX = svgW > wrapW;
+  const overflowsY = svgH > wrapH;
+
+  // center small content via flex; align to start on overflowing axes
+  wrapperEl.style.justifyContent = overflowsX ? 'flex-start' : 'center';
+  wrapperEl.style.alignItems     = overflowsY ? 'flex-start' : 'center';
+
+  // scroll-center once so we don't fight the user later
+  if (!wrapperEl.dataset.centered) {
+    if (overflowsX) wrapperEl.scrollLeft = Math.max(0, Math.floor((svgW - wrapW) / 2));
+    if (overflowsY) wrapperEl.scrollTop  = Math.max(0, Math.floor((svgH - wrapH) / 2));
+    wrapperEl.dataset.centered = '1';
+  }
+}
+
+
+    // make the slide tall enough & notify Swiper
+    const slideEl = document.getElementById(svgId)?.closest('.swiper-slide');
+
+    // ----- nodes -----
+    const nodeSel = g.selectAll('g.node').data(visNodes, d => d.id || (d.id = ++__nodeIdCounter));
+
+    const nodeEnter = nodeSel.enter().append('g')
+      .attr('class','node')
+      .attr('transform', d => `translate(${source.y0},${source.x0})`)
+      .on('click', d => {
+        if (d.children) { d._children = d.children; d.children = null; }
+        else            { d.children = d._children; d._children = null; }
+        update(d);
+      })
+      .on('mouseover', d=>{
+        tooltip.style('visibility','visible')
+               .html(`<strong>${d.data.name}</strong><br>${d.data.value||''}`);
+      })
+      .on('mousemove', ()=>{
+        const pad=12, vw=window.innerWidth, vh=window.innerHeight;
+        const r = tooltip.node().getBoundingClientRect();
+        let x = d3.event.clientX+pad, y = d3.event.clientY-pad;
+        if (x+r.width+pad>vw)  x = vw-r.width-pad;
+        if (y+r.height+pad>vh) y = vh-r.height-pad;
+        tooltip.style('left',x+'px').style('top',y+'px');
+      })
+      .on('mouseout', ()=>tooltip.style('visibility','hidden'));
+
+    nodeEnter.append('circle').attr('r', 1e-6);
+    nodeEnter.append('text')
+      .attr('dy','.35em')
+      .attr('x', d => (d.children || d._children) ? -12 : 12)
+      .attr('text-anchor', d => (d.children || d._children) ? 'end' : 'start')
+      .style('font-size', `${FONT_PX}px`)
+      .text(d => d.data.name);
+
+    const nodeUpdate = nodeEnter.merge(nodeSel);
+    nodeUpdate.transition().duration(300)
+      .attr('transform', d => `translate(${d.y},${d.x})`);
+
+    nodeUpdate.select('circle')
+      .attr('r', CIRCLE_R)
+      .style('stroke', d => (!d.children && !d._children) ? '#2e7d32' : 'steelblue')
+      .style('fill',   d => (!d.children && !d._children) ? '#e8f5e9' : '#fff');
+
+    nodeSel.exit().transition().duration(250)
+      .attr('transform', d => `translate(${source.y},${source.x})`)
+      .remove();
+
+    // ----- links -----
+    const linkSel = g.selectAll('path.link').data(visLinks, d => d.target.id);
+
+    linkSel.enter().insert('path','g')
+      .attr('class','link')
+      .style('stroke-width', LINK_W)
+      .attr('d', d => { const o = {x: source.x0, y: source.y0}; return elbow(o,o); })
+      .merge(linkSel).transition().duration(300)
+      .style('stroke-width', LINK_W)
+      .attr('d', d => elbow(d.source, d.target));
+
+    linkSel.exit().transition().duration(250)
+      .attr('d', d => { const o = {x: source.x, y: source.y}; return elbow(o,o); })
+      .remove();
+
+    // stash positions for next tween
+    visNodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+  }
+
+  function elbow(s,d){
+    return `M ${s.y} ${s.x}
+            C ${(s.y+d.y)/2} ${s.x},
+              ${(s.y+d.y)/2} ${d.x},
+              ${d.y} ${d.x}`;
+  }
+
+  function expandAll(d){ if (d._children){ d.children = d._children; d._children = null; } if (d.children) d.children.forEach(expandAll); }
+  function collapseToLevel(d, level){
+    if (d.depth >= level) { if (d.children){ d._children = d.children; d.children = null; } }
+    if (d.children) d.children.forEach(c => collapseToLevel(c, level));
+    if (d._children) d._children.forEach(c => collapseToLevel(c, level));
+  }
+
+  TREE_REGISTRY[svgId] = {
+    root,
+    update: () => update(root),
+    expandAll: () => { expandAll(root); update(root); },
+    collapseToLevel: (lvl=0) => { collapseToLevel(root, lvl); update(root); }
+  };
+}
+
+/* -------------------------------------------------------------
+   2.  Build all trees
+----------------------------------------------------------------*/
+function buildAllTrees(){
+  const mapping = { 'tree-container-1': data1, 'tree-container-2': data2, 'tree-container-3': data3, 'tree-container-4': data4 };
+  Object.keys(mapping).forEach(id => {
+    drawTree(id, mapping[id]);
+    const wrapper = document.getElementById(id).closest('.tree-container-wrapper');
+    // attachHorizontalScrollButtons(wrapper);
+  });
+}
+
+/* expand/collapse buttons */
+document.addEventListener('click', (e)=>{
+  const expandBtn = e.target.closest('.btn-expand');
+  const collapseBtn = e.target.closest('.btn-collapse');
+  if (!expandBtn && !collapseBtn) return;
+  const targetId = (expandBtn || collapseBtn).dataset.target;
+  const ctl = TREE_REGISTRY[targetId];
+  if (!ctl) return;
+  if (expandBtn)   ctl.expandAll();
+  if (collapseBtn) ctl.collapseToLevel(1);
+  requestAnimationFrame(() => taxonomySwiper?.updateAutoHeight(200));
+});
+
+/* -------------------------------------------------------------
+   3.  Swiper + Tabs + Benchmark toggles
+----------------------------------------------------------------*/
+let taxonomySwiper;
+
+document.addEventListener('DOMContentLoaded', () => {
+  taxonomySwiper = new Swiper('.mySwiper', {
+  slidesPerView: 1,
+  spaceBetween: 30,
+  autoHeight: true,
+  observer: true,
+  observeParents: true,
+
+  // ⬇️ important for mobile: don't hijack touches meant for inner scrollers
+  nested: true,
+  touchStartPreventDefault: false,
+  passiveListeners: true,
+
+  allowTouchMove: false,
+  on: {
+    slideChange: () => {
+      setActiveTab(taxonomySwiper.activeIndex);
+      buildTreeForIndex(taxonomySwiper.activeIndex);
+    }
+  }
+});
+
+  // ----- MAIN TAXONOMY TABS (Camera | Lighting | Setup | Events) -----
+  const mainTabList = document.querySelector('.hero.teaser .taxonomy-tabs[aria-label="Taxonomies"]');
+  const tabs = mainTabList ? mainTabList.querySelectorAll('.taxonomy-tab') : [];
+
+  function setActiveTab(idx){
+    tabs.forEach((btn,i)=>{
+      const active = i === idx;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  tabs.forEach(btn=>{
+    btn.addEventListener('click', () => taxonomySwiper.slideTo(+btn.dataset.slide));
+  });
+
+  // First render
+  setActiveTab(taxonomySwiper.activeIndex);
+  buildTreeForIndex(taxonomySwiper.activeIndex);
+
+  // Rebuild active on resize
+  window.addEventListener('resize', debounce(() => {
+    buildTreeForIndex(taxonomySwiper.activeIndex);
+  }, 250));
+
+  // ----- BENCHMARK IMAGE TOGGLES (independent of Swiper) -----
+  const categoryTabsContainer = document.getElementById('category-tabs');
+  if (categoryTabsContainer) {
+    const categoryTabs = categoryTabsContainer.querySelectorAll('.taxonomy-tab');
+    const categoryImage = document.getElementById('category-image');
+
+    categoryTabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryTabs.forEach(b => {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected', 'true');
+
+        const newSrc = btn.getAttribute('data-image');
+        if (categoryImage && newSrc) categoryImage.src = newSrc;
+      });
+    });
+  }
+});
+
+/* -------------------------------------------------------------
+   4.  Data
+----------------------------------------------------------------*/
+ const data1 = {
+      "name": "Setup",
+      "value": "Defines the overall arrangement and composition and blend of the scene and the subjects in it, setting the mood and visual style through its elements.",
+      "children": [
+        {
+          "name": "Scene",
+          "value": "Encompasses all visual details that construct the overall scene, including set design, scene texture, geometry, and spatial layout.",
+          "children": [
+            {
+              "name": "Texture",
+              "value": "Controls the surface quality and tactile feel of the scene, affecting visual detail and artistic style.",
+              "children": [
+                { "name": "Contrast", "value": "Determines the difference between light and dark areas to enhance visual impact." },
+                { "name": "Blur", "value": "Introduces softness to parts of the image to guide focus or create mood." },
+                { "name": "Noise", "value": "Adds random variations in brightness or color, mimicking film grain or digital sensor noise." },
+                { "name": "Film Grain", "value": "Emulates the granular texture of traditional film photography for a classic look." },
+                { "name": "Color Palette", "value": "Defines the overall range and harmony of colors in the scene, influencing its mood." }
+              ]
+            },
+            {
+              "name": "Geometry",
+              "value": "Determines the structural composition of the scene, focusing on the arrangement of lines, shapes, and balance.",
+              "children": [
+                {
+                  "name": "Frame",
+                  "value": "Describes the overall geometry of the scene, created the positioning of the objects in the scene.",
+                  "children": [
+                    { "name": "Lines", "value": "Directional elements that guide the viewer’s gaze within the scene." },
+                    {
+                      "name": "Shapes", "value": "Focuses on the geometric forms present in the composition, both regular and organic.",
+                      "children": [
+                        { "name": "Regular", "value": "Structured, geometric forms such as squares, circles, and triangles that add order to the design." },
+                        { "name": "Natural", "value": "Unstructured shapes that naturally emerge in the scene, without any geometric constraints" }
+                      ]
+                    },
+                    { "name": "Balance", "value": "Refers to the distribution of visual weight across the composition, ensuring a harmonious layout." }
+                  ]
+                },
+                {
+                  "name": "Space",
+                  "value": "Defines the spatial arrangement and depth within the scene, creating a sense of three-dimensionality.",
+                  "children": [
+                    {
+                      "name": "Spatial Locations", "value": "Specifies the placement of objects in relation to the viewer, distinguishing foreground, midground, and background areas.",
+                      "children": [
+                        { "name": "Positional Acc.", "value": "The absolute position of an object or a subject in a scene" },
+                        { "name": "Relative Pos.", "value": "The relative positioning of an object in relationship to other objects in the scene." }
+                      ]
+                    },
+                    { "name": "Depth", "value": "Controls the perception of distance between elements, enhancing the three-dimensional feel of the scene." }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Set Design",
+              "value": "The design and arrangement of the set, including props, backdrop, and environment, to create a specific atmosphere.",
+              "children": [
+                {
+                  "name": "Backdrop", "value": "The background or setting against which the scene takes place.",
+                  "children": [
+                    { "name": "Setting", "value": "Defines if the scene is happening indoors or outdoors" },
+                    { "name": "Time of Day", "value": "The time of day the scene is set in." },
+                    { "name": "Location", "value": "The specific place or setting of the scene." }
+                  ]
+                },
+                {
+                  "name": "Environment", "value": "Defines the overall environment in which the scene is taking place",
+                  "children": [
+                    {
+                      "name": "Organization", "value": "The arrangement of the available space in the environment",
+                      "children": [
+                        { "name": "Negative", "value": "Defines if there are a lot of empty space." },
+                        { "name": "Positive", "value": "Defines how the space is occupied in the environment" }
+                      ]
+                    },
+                    { "name": "Mood", "value": "The emotional atmosphere or feeling created by the environment." },
+                    { "name": "Scale", "value": "The relative size or extent of the environment." },
+                    { "name": "Style", "value": "The artistic or visual style of the backdrop." },
+                    { "name": "Background", "value": "The part of the scene that is behind the main subject and does not need to be exactly described" },
+                    { "name": "Elements", "value": "The natural or artificial components of the backdrop." }
+                  ]
+                },
+                {
+                  "name": "Props", "value": "Objects present in the set, which the subjects may interact with,",
+                  "children": [
+                    { "name": "Description", "value": "A general description of the prop." },
+                    { "name": "Class", "value": "The category or type of the prop." },
+                    { "name": "Material", "value": "The substance(s) the prop is made of." },
+                    { "name": "Pattern", "value": "The design on the prop." },
+                    { "name": "Utility", "value": "The purpose or function of the prop, whether it just exists on the scene or will it be used by the subject" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Subjects",
+          "value": "Defines the overall subjects present in the scene.",
+          "children": [
+            { "name": "Class", "value": "The category or type of the subjects." },
+            { "name": "Accessories", "value": "Items worn or carried by the subjects that enhance their appearance or functionality." },
+            { "name": "Costume", "value": "The clothing worn by the subjects, especially for a performance or to create a specific character." },
+            { "name": "Hair", "value": "The style and appearance of the subjects' hair." },
+            { "name": "Makeup", "value": "Cosmetics applied to the subjects' face or body to enhance or alter their appearance." },
+            { "name": "Pose", "value": "The position or stance of the subjects, especially for a photograph or portrait." },
+            {
+              "name": "Personality", "value": "The distinct traits and characteristics of the subjects.",
+              "children": [
+                { "name": "Silhouette", "value": "The outline or shape of the subjects against a light background." },
+                { "name": "Proportions", "value": "The relative size and scale of the subjects' body parts or features." }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Text Generation",
+          "value": "The process of creating written content to be displayed on the video"
+        }
+      ]
+    };
+
+    const data2 = {
+      "name": "Camera",
+      "value": "This category covers all camera features that shape the visual narrative, including internal settings, orientation, movement, and creative framing.",
+      "children": [
+        {
+          "name": "Intrinsics",
+          "value": "Camera intrinsics describe the internal characteristics that affect image capture, such as lens properties and sensor settings.",
+          "children": [
+            { "name": "Lens Size", "value": "Defines the focal length and field of view of the camera lens." },
+            { "name": "Depth of Field", "value": "Controls the range of focus in the image, affecting subject isolation" },
+            {
+              "name": "Exposure",
+              "value": "Exposure controls the amount of light captured by the camera sensor.",
+              "children": [
+                { "name": "Aperture", "value": "The camera lens opening that controls the amount of light propagated through the camera." },
+                { "name": "Shutter Speed", "value": "The duration for which the camera sensor is exposed to light." },
+                { "name": "ISO", "value": "Sensitivity of the camera sensor to light." }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Extrinsics",
+          "value": "Camera extrinsics control the orientation and position of the camera relative to the subject.",
+          "children": [
+            { "name": "Angle", "value": "Defines the camera's viewpoint in relation to the subject." }
+          ]
+        },
+        {
+          "name": "Trajectory",
+          "value": "Trajectory encompasses the camera's movement and the equipment used to achieve smooth or dynamic shots..",
+          "children": [
+            {
+              "name": "Camera Movement",
+              "value": "Describes how the camera moves during a shot, influencing the storytelling and mood.",
+              "children": [
+                { "name": "Static", "value": "A fixed camera position without any movement." },
+                { "name": "2D", "value": "Camera movements restricted to horizontal or vertical axes." },
+                { "name": "3D", "value": "Camera movements that incorporate spatial depth and multi-axis motion." }
+              ]
+            },
+            { "name": "Gear", "value": "Specifies the support systems and stabilization equipment used to facilitate camera movement."}
+          ]
+        },
+        {
+          "name": "Creative Intent",
+          "value": "Creative Intent outlines the artistic decisions behind the camera's composition, framing, and overall visual style.",
+          "children": [
+            { "name": "Shot Size", "value": "Determines how much of the subject and surroundings are visible in the frame."},
+            { "name": "Framing", "value": "Defines the composition and spatial arrangement of subjects within the frame." }
+          ]
+        }
+      ]
+    };
+
+    const data3 = {
+      "name": "Lighting",
+      "value": "Controls for scene illumination.",
+      "children": [
+        {
+          "name": "Sources",
+          "value": "Specifies the origins of the lighting in the scene.",
+          "children": [
+            { "name": "Natural", "value": "Natural sources of light, such as sunlight, moonlight, or firelight." },
+            { "name": "Artificial / Practicals", "value": "Man-made light sources that illuminate the scene." }
+          ]
+        },
+        { "name": "Color Temperature", "value": "Defines the hue of the light, typically measured in Kelvin, affecting the scene’s mood." },
+        { "name": "Lighting Conditions", "value": "Describes various lighting scenarios or ambient conditions present in a scene." },
+        {
+          "name": "Effects",
+          "value": "Effects created by the lighting setup, including shadows and reflections.",
+          "children": [
+            {
+              "name": "Shadows",
+              "value": "Different types of shadows formed by the interplay of light and objects..",
+              "children": [
+                { "name": "Soft", "value": "Subtle and diffused shadows resulting from indirect or scattered light." },
+                { "name": "Hard", "value": "Sharp, well-defined shadows generated by a direct light source." }
+              ]
+            },
+            { "name": "Reflection", "value": "The effect of light bouncing off surfaces to create a reflective appearance." }
+          ]
+        },
+        {
+          "name": "Position",
+          "value": "Specifies the placement or direction of the light source relative to the subject"
+        },
+        { "name": "Advanced Controls",
+          "value": "Additional features and dynamic effects to control the lighting.",
+          "children": [
+            { "name": "Motion", "value": "Dynamic changes or movement in the lighting effect" },
+            { "name": "Color Gels", "value": "Colored filters applied to lights to modify or enhance the color of the illumination." }
+          ]
+        }
+      ]
+    };
+
+    const data4 = {
+      "name": "Events",
+      "value": "This category covers all types of events happening in the scene, along with its granular details",
+      "children": [
+        {
+          "name": "Types",
+          "value": "The fundamental nature of the changes or occurrences within the scene.",
+          "children": [
+            {
+              "name": "Actions", "value": "Specific physical movements or activities taking place.",
+              "children": [
+                {
+                  "name": "Interaction Types", "value": "Defines if the action involves interaction",
+                  "children": [
+                    { "name": "Standalone", "value": "If the action is stand-alone" },
+                    { "name": "Interactive", "value": "If the action involves subject-subject or object-subject interaction" }
+                  ]
+                },
+                {
+                  "name": "Portrayed as", "value": "How the action is presented within the scene",
+                  "children": [
+                    { "name": "Temporal", "value": "How actions unfold across time." },
+                    { "name": "Contextual", "value": "Where the action takes place within the scene",
+                      "children": [{"name": "Foreground", "value": "The action is taking place in the foreground"}, {"name": "Background", "value": "The action is taking place in the background"}]
+                    },
+                    { "name": "Uncertainty", "value": "The probability of the outcome of the action" }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Emotions", "value": "The feelings or moods conveyed within the scene.",
+              "children": [
+                {
+                  "name": "Expression Types", "value": "If the emotion is explicitly shown or needs to be inferred.",
+                  "children": [
+                    { "name": "Implicit", "value": "Emotions that are suggested or implied rather than directly stated." },
+                    { "name": "Explicit", "value": "Emotions that are clearly and directly shown or stated within the scene." }
+                  ]
+                },
+                {
+                  "name": "Portrayed as", "value": "How the emotion is presented within the scene",
+                  "children": [
+                    { "name": "Temporal", "value": "How emotions evolve across time." },
+                    { "name": "Contextual", "value": "Where the emotion is being felt on the screen",
+                      "children": [{"name": "Foreground", "value": "The emotion is taking place in the foreground"}, {"name": "Background", "value": "The emotion is taking place in the background"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Dialogues", "value": "Spoken exchanges between characters.",
+              "children": [
+                { "name": "Delivery Types", "value": "How the dialogue is delivered" },
+                { "name": "Portrayed as", "value": "How the dialogue is presented within the scene",
+                  "children": [{"name": "Contextual", "value": "Where the dialogue takes place within the scene"}]
+                }
+              ]
+            },
+            { "name": "Environment", "value": "Changes or occurrences in the setting of the scene." }
+          ]
+        },
+        {
+          "name": "Advanced Controls", "value": "Specific points or structures that influence the flow and impact of the scene.",
+          "children": [
+            { "name": "Story Structure", "value": "Key narrative elements that shape the shot's progression." },
+            {
+              "name": "Rhythm", "value": "The pacing and regularity of events within the shot.",
+              "children": [
+                {"name": "Pace", "value": "How fast the events are happening"},
+                {"name": "Regularity", "value": "How regularly the events are happening"}
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+  </script>
+<script>
+
+const POS_DATA = {
+  actions: ['cyclic.mp4', 'concurrent.mp4', 'causal.mp4'],
+  camera_angle: ['aerial.mp4','ground.mp4','low.mp4'],
+  camera_shot_size: ['medium_close_up.mp4','medium.mp4','wide.mp4'],
+  elements: ['foggy_pier.mp4','fresh_snow.mp4','undulating_dust.mp4'],
+  emotions: ['eyes_filling_with_tears.mp4','stopping_to_share_a_laugh.mp4','visibly_upset_toddler.mp4'],
+  geometry: ['symmetric_framing.mp4','triangular_spires.mp4','vertical_shelves.mp4'],
+  lighting_effects: ['backlit_reflections.mp4','long_diagonal_shadows.mp4','reflections.mp4'],
+  lighting_source: ['fluorescent_lit_hallway.mp4','overhead_pendant_lamps.mp4','sunlight.mp4'],
+  props: ['goofy_apron_patterned_with_geometric_grids.mp4','stone_walls_bear_water_stains_and_a_grotesque_mural.mp4','woven_wicker_basket.mp4'],
+  text_generation: ['enter_oblivion.mp4','guiding_light.mp4','one_year_later.mp4']
+};
+
+const POS_LABEL = {
+  actions: 'Actions',
+  camera_angle: 'Camera Angle',
+  camera_shot_size: 'Camera Shot Size',
+  elements: 'Elements',
+  emotions: 'Emotions',
+  geometry: 'Geometry',
+  lighting_effects: 'Lighting Effects',
+  lighting_source: 'Lighting Source',
+  props: 'Props',
+  text_generation: 'Text Generation'
+};
+
+(function initPosOnly(){
+  const catsWrap = document.getElementById('pos-cats');
+  const grid     = document.getElementById('pos-grid');
+  if (!catsWrap || !grid) return;
+
+  const catKeys = Object.keys(POS_DATA);
+  let currentCat = catKeys[0];
+
+  // helper: filename -> title case label
+  const titleFromFilename = (f) =>
+    (f||'').replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').trim()
+           .replace(/\b\w/g, c => c.toUpperCase());
+
+  // Build category pills
+  catsWrap.innerHTML = catKeys.map((k,i)=>`
+    <button class="taxonomy-tab${i===0?' is-active':''}" role="tab"
+            aria-selected="${i===0?'true':'false'}" data-cat="${k}">
+      ${POS_LABEL[k] || k}
+    </button>
+  `).join('');
+
+  catsWrap.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.taxonomy-tab[data-cat]');
+    if(!btn) return;
+    currentCat = btn.dataset.cat;
+    [...catsWrap.querySelectorAll('.taxonomy-tab')].forEach(b=>{
+      const active = b===btn;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    render();
+  });
+
+  function render(){
+    const files = POS_DATA[currentCat] || [];
+    const base  = `assets/positive/${currentCat}/`;  // ✅ correct folder name
+
+    grid.innerHTML = files.slice(0,3).map(f=>`
+      <figure class="w-full border border-gray-200 rounded overflow-hidden bg-white">
+        <video
+          src="${base}${f}"
+          muted playsinline loop
+          class="object-cover w-full h-52 md:h-60"
+          onmouseenter="this.play()" onfocus="this.play()"
+          onloadedmetadata="this.play().catch(()=>{})"></video>
+        <figcaption class="caption--simple">${titleFromFilename(f)}</figcaption>
+      </figure>
+    `).join('');
+
+    grid.querySelectorAll('video').forEach(v=>v.play().catch(()=>{}));
+  }
+
+  render();
+})();
+</script>
+
+
+  <script>
+(() => {
+  /* ---------------- Section Descriptions ---------------- */
+  const sectionDescriptions = {
+    scripts : 'Qualitative results on SCINE Scripts across models.',
+    visuals : 'Qualitative results on SCINE Visuals across models.',
+    pairwise: 'Side-by-Side Model Comparisons with per-category scores.'
+  };
+  const $ = sel => document.querySelector(sel);
+  $('#desc-scripts' ).textContent = sectionDescriptions.scripts;
+  $('#desc-visuals' ).textContent = sectionDescriptions.visuals;
+  $('#desc-pairwise').textContent = sectionDescriptions.pairwise;
+
+  /* ---------------- Model Data ---------------- */
+  const modelNames=['PyramidFlow','vchitect_2.0','cogvideo_5b','easyanimate_5.1','hunyuan','ltx_video','mochi','wan_1b','wan_14b','luma_ray_2','minimax','pika_2.2'];
+  const modelDisplay={PyramidFlow:'Pyramid Flow','vchitect_2.0':'VChitect 2.0',cogvideo_5b:'CogVideo 5B','easyanimate_5.1':'EasyAnimate 5.1',hunyuan:'Hunyuan',ltx_video:'LTX Video',mochi:'Mochi',wan_1b:'Wan 1B',wan_14b:'Wan 14B',luma_ray_2:'Luma Ray 2',minimax:'Minimax','pika_2.2':'Pika 2.2'};
+
+  /* -------------------- Scripts Prompts -------------------- */
+  const scriptPages=[
+    {id:'00011',prompt:'Inside a busy street corner, during the day, a street vendor gestures energetically while serving a hot dog to a customer. Meanwhile, hurried pedestrians navigate the crowded sidewalk, and a cyclist carefully maneuvers through slow-moving traffic in the background.',meta:'Concurrent Actions'},
+    {id:'00051',prompt:'At a wedding reception, the bride starts tossing her bouquet over her shoulder as, simultaneously, a group of bridesmaids begins jostling for position to catch it.',meta:'Overlapping Actions'},
+    {id:'00065',prompt:'In a park, a street performer juggles three brightly colored balls, maintaining a smooth, repeating cascade pattern.',meta:'Cyclic Actions'},
+    {id:'00114',prompt:'Medium shot of a lone astronaut planting a flag on the surface of Mars. The Earth hangs small in the black sky. Text appears etched onto the flagpole base: “For All Mankind”. The text remains visible as the shot holds.',meta:'Text Generation'},
+    {id:'00145',prompt:'Two friends drive down a sunny desert highway in a convertible, wind in their hair. The passenger suddenly points off-road with wide eyes, “Whoa! Is that... a giant ball of yarn? We have to-- stop!”',meta:'Dialogues'},
+    {id:'00206',prompt:'In a small and otherwise barren park, amid cold daylight, a lone figure of an old man sits crouched on a swing. He looks up and frowns at the tears escaping his closed eyelids.',meta:'Emotion – Sadness'},
+    {id:'00740',prompt:'Daytime in a quiet suburban kitchen; a woman turns around and freezes, her eyes fixed on an open backdoor gently swinging.',meta:'Emotion – Surprise'},
+    {id:'01103',prompt:'At a desolate train platform, a small group of conspirators clusters around a cryptic map, their anxious eyes scanning their surroundings in a silent agreement of urgency',meta:'Genre – Thriller'},
+    {id:'00469',prompt:'During a lively outdoor concert in the park, a man offers his hand to a woman standing alone, inviting her to dance with him under the starlit sky.',meta:'Genre – Romance'},
+    {id:'00350',prompt:'Inside a cramped elevator, a woman carrying an enormous bouquet of balloons accidentally pops one, causing a chain reaction of popping balloons and startled yelps, with the petals covering every surface of the small space.',meta:'Genre – Comedy'}
+  ];
+
+  /* -------------------- Visuals Prompts -------------------- */
+  const visualPages=[
+      {id:'00078',prompt:'Bright spray paint lifts off a concrete wall, streaming back into the nozzle of a spray can held by a figure whose arm moves in a swift, reversed motion, captured with a wide lens and hard shadows cast by direct light, the scene bathed in cool tones as a tracking shot follows the paint\'s trajectory, flickering light emphasizing the can\'s metallic gleam.',meta:'Cinematographer – Easy'},
+      {id:'00362',prompt:'A woman with long braided hair sprints with primal urgency along a rocky beach at dusk, the shore\'s churning waves to her right rendered in cool desaturated blues and grays under an overcast sky. Her eyes remain locked on an inflatable raft being violently tugged seaward as she maintains perfect parallel motion with the crashing surf, bare feet pounding wet sand in a wide tracking shot stabilized for fluid movement. A man and two bounding dogs mirror her path slightly upshore, their elongated shadows stretching toward the treeline in hard chiaroscuro from low-key sidelighting. The pursuing wave she races beside temporarily swallows driftwood and seabirds before retreating, its foamy fingers clawing at gnarled pine roots marking the high tide line.',meta:'Director – Easy'},
+      {id:'00535',prompt:'An old-fashioned rotary phone with a weathered Bakelite body sits atop a bedside table of pale, distressed wood, its high-contrast silhouette sharp against the muted sepia tones of an otherwise empty room. The relentless ringing reverberates through negative space where dusk light slants through half-drawn curtains, casting long diagonal shadows that stretch toward a vacant bedframe.',meta:'Production Designer – Easy'},
+      {id:'00775',prompt:'In a tense saloon lit by flickering tungsten bulbs casting hard shadows through direct side lighting, a medium close-up two-shot frames a cowboy slamming his fist onto the weathered oak table, shallow depth of field at wide aperture isolating his snarling face against blurred background bottles. A dolly pushes in slowly as Dutch angle tension builds, warm backlight sculpting pistol smoke drifting through shafts of artificial gloom, the rival\'s fearful eyes reflected in a whiskey glass foreground element under crisp medium ISO exposure.',meta:'Cinematographer – Hard'},
+      {id:'00799',prompt:'Inside a caf\u00e9 at midday, warm-toned amber and walnut hues wrap patrons frozen mid-action\u2014hands hovering over steaming mugs\u2014as sudden rain streaks floor-to-ceiling windows. A medium-full shot slowly pans right across linen-draped worn oak tables arranged in rule-of-thirds harmony, backlight from the storm casting silhouettes against the cascading water while overcast daylight etches deepening shadows across startled faces.',meta:'Director – Easy'},
+      {id:'00895',prompt:'A candle flame flickers gently atop a romantic dinner table for two on a cliffside at dusk, overlooking the ocean. The weathered teakwood table supports polished silver tableware and ivory linen with subtle grid-pattern embroidery, accompanied by beeswax candles in hammered brass holders. A deep navy table runner mirrors the darkening horizon where indigo waves break against distant rocks. Warm amber candlelight contrasts with cool twilight tones, as the table\u2019s horizontal lines perfectly align with the ocean\u2019s horizon under a rule-of-thirds sky. Crystal wine glasses catch the dancing light while salt-tinged air ruffles crisp, triangular folded napkins, their motion softened by coastal winds. A single gardenia blossom rests between the settings, its waxy petals glowing golden against the matte linen as dusk transforms the sky from burnt sienna to violet.',meta:'Production Designer – Hard'},
+      {id:'01128',prompt:'On an overgrown forest path, two adventurers share a lighthearted moment as one dramatically lifts a moss-covered artifact while the other laughs in pure delight, captured with a wide lens at wide aperture to isolate their interaction amidst the dense foliage. The camera arcs around them in a medium-full two shot, maintaining a shallow depth of field that renders the sun-dappled forest background as soft bokeh. Golden Hour light filters through the canopy at NEUTRAL, casting warm side light that sculpts their faces and a subtle backlight to separate them from the environment. Diffused shadows created by overhead foliage pattern the ground, while a slight Dutch tilt amplifies the scene\'s playful energy as the artifact catches a glint of directional sunlight.',meta:'Cinematographer – Hard'},
+      {id:'00012',prompt:'On a sprawling lawn in the day, a family unpacks a picnic basket onto a blanket, captured in a wide master shot with a deep depth of field using a wide lens with a narrow aperture. A dolly-mounted camera glides horizontally at knee height, panning smoothly between the picnic setup and two children tossing a frisbee back and forth, their motion frozen crisply with a fast shutter speed. The low ISO exposure maintains clarity across the sunlit scene, while the composition strategically frames the jogger\'s steady path along the grass border within the same continuous shot.',meta:'Cinematographer – Hard'},
+      {id:'00044',prompt:'In a dimly lit, damp basement with peeling paint and moss-streaked concrete walls under high contrast shadows, a single water droplet falls with metronomic precision from a corroded copper pipe. Captured in shallow depth of field, it lands squarely on a 1940s-era electrical fuse box with rusted iron panels at frame right, beneath a lone tungsten bulb casting hard, jagged shadows. As sparks erupt in a crackling horizontal arc from the ruptured casing, malfunctioning circuitry floods the foreground with erratic cyan bursts while the bulb\u2019s death throes reveal layers of peeling insulation and crumbling brick. A slow camera tilt ascends from the sparking fuse box up the dripping pipe, and as the final light fades, the frame plunges into inky darkness punctuated only by fading orange embers',meta:'Director – Hard'},
+      {id:'00236',prompt:'In a dimly lit Victorian-inspired study with mahogany paneling and heavy velvet drapes, a man in a tailored charcoal suit stands silhouetted against a grand arched window framing a rain-streaked metropolis glittering with midnight blue city lights. He swirls amber whiskey in a lead-crystal tumbler, the liquid catching golden highlights from a brass desk lamp illuminating a cracked silver frame holding a vibrant family photograph - its sunlit yellows and grass greens glaringly discordant with the study\'s burgundy-and-gold color scheme. The clawfoot desk beneath bears witness to neglect, its polished surface marred by water rings and clustered with relics of better days: a pocket watch chain spilling from a leather-bound ledger, cigar ashes dusting a jade paperweight, the photograph\'s fractured glass reflecting distorted fragments of a smiling woman and child.',meta:'Production Designer – Hard'},
+      {id:'00442',prompt:'In a zero-gravity training facility with high-tech metallic surfaces, astronaut candidates wearing form-fitting compression suits navigate floating aluminum obstacle modules. A fisheye lens exaggerates the curved geometry of magnetic training panels suspended in grid formation, while a stabilizer-mounted camera tracks laterally with a candidate mid-maneuver \u2013 capturing their flailing limbs reflected in glossy safety padding. Cool LEDs cast sharp geometric shadows across faces beaded with sweat, their determined grimaces backlit by floating warning beacons that paint crimson streaks across the chrome environment.',meta:'Director – Hard'},
+      {id:'00461',prompt:'In a bustling university hallway during a lively graduation ceremony, captured with a Medium lens and shallow depth of field to isolate the pair from the chaotic background, a proud father and his accomplished daughter share a spontaneous, heartfelt hug in close-up framing. The camera executes a gentle push-in movement on a stabilizer, compressing the emotional space between them as celebratory crowds blur into abstract shapes of color and motion.',meta:'Camera – Easy'}
+    ];
+
+  /* ---------------- Cinematography reference (images) ---------------- */
+  const categories={
+    angles:['dutch-right.jpeg','eye-level.jpeg','ground-level.jpeg','HA.jpeg','hip-level.jpeg','knee-level.jpeg','LA.jpeg','overhead.jpeg','shoulder-level.jpeg'],
+    shot:['WS.jpeg','MS.jpeg','FS.jpeg','CU.jpeg','ECU.jpeg','MCU.jpeg'],
+    Depth_of_Field:['deep-focus.jpeg','shallow-focus.jpeg','rack-focus.jpeg','soft-focus.jpeg','split-diopter.jpeg','tilt-shift.jpeg'],
+    framing:['single.jpeg','2-shot.jpeg','pov.jpeg','OTS.jpeg'],
+    'soft-lighting':['high-key-1.png','high-key-2.jpeg','high-key-3.png','high-key-4.png','high-key-5.png','high-key-6.png','high-key-7.png','high-key-8.png'],
+    'hard-lighting':['0.png','1.png','2.png','3.png','4.png','5.png','6.png','7.png'],
+    'setup_balance':['rot.jpg','rot2.jpg','rot3.jpg','symmetry.webp','symmetry2.jpeg','symmetry3.webp'],
+    'setup_lines_shapes':['line1.jpg','line2.jpg','line3.jpg','line4.jpg','line5.jpg','line6.jpg']
+  };
+  const categoryDisplay={
+    angles:'Camera Angle', shot:'Camera Shot Size', Depth_of_Field:'Camera Depth of Field',
+    framing:'Camera Framing','soft-lighting':'Soft Lighting','hard-lighting':'Hard Lighting',
+    'setup_balance':'Setup Balance','setup_lines_shapes':'Setup Lines and Shapes'
+  };
+  const imageLabels={
+    angles:{'dutch-right.jpeg':'Dutch Right','eye-level.jpeg':'Eye Level','ground-level.jpeg':'Ground Level','HA.jpeg':'High Angle','hip-level.jpeg':'Hip Level','knee-level.jpeg':'Knee Level','LA.jpeg':'Low Angle','overhead.jpeg':'Overhead','shoulder-level.jpeg':'Shoulder Level'},
+    shot:{'WS.jpeg':'Wide Shot','MS.jpeg':'Medium Shot','FS.jpeg':'Full Shot','CU.jpeg':'Close Up','ECU.jpeg':'Extreme Close Up','MCU.jpeg':'Medium Close Up'},
+    Depth_of_Field:{'deep-focus.jpeg':'Deep Focus','shallow-focus.jpeg':'Shallow Focus','rack-focus.jpeg':'Rack Focus','soft-focus.jpeg':'Soft Focus','split-diopter.jpeg':'Split Diopter','tilt-shift.jpeg':'Tilt Shift'},
+    framing:{'single.jpeg':'Single Shot','2-shot.jpeg':'2 Shot','pov.jpeg':'PoV','OTS.jpeg':'Over the Shoulder'}
+  };
+  const noLabelCats=['soft-lighting','hard-lighting','setup_balance','setup_lines_shapes'];
+
+  /* -------------- Utilities -------------- */
+  const cacheScripts={},cacheVisuals={};
+  const shuffle=a=>{const arr=[...a];for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
+  async function pickModels(id,f,need){const s=shuffle(modelNames),c=[];for(const m of s){if(await fetch(`${f}${m}_${id}.mp4`,{method:'HEAD'}).then(r=>r.ok).catch(()=>false))c.push(m);if(c.length===need)break;}return c;}
+  async function getModels(id,f,need,cache){if(cache[id])return cache[id];return cache[id]=await pickModels(id,f,need);}
+  const grid=(mods,f,id,cols)=>`<div class="grid grid-cols-${cols} gap-0 hide-scrollbar">`+
+    mods.map(m=>`<div class="relative group w-full h-40 md:h-48 overflow-hidden border border-gray-200"><video src="${f}${m}_${id}.mp4" muted loop playsinline class="object-cover w-full h-full"></video><span class="absolute inset-x-0 bottom-0 bg-black/70 text-center text-xs p-1 text-white">${modelDisplay[m]||m}</span></div>`).join('')+
+  '</div>';
+
+  /* -------------- Scripts rendering -------------- */
+  let idxS=0;
+  const wrapS=document.getElementById('carousel-wrapper'),
+        prS =document.getElementById('promptBox');
+  async function renderS(){
+    wrapS.innerHTML='<span class="has-text-grey">Loading videos…</span>';
+    const p=scriptPages[idxS], f=`assets/scine_scripts/${p.id}/`,
+          mods=await getModels(p.id,f,9,cacheScripts);
+    wrapS.innerHTML=grid(mods,f,p.id,3);
+    prS.innerHTML = `${p.prompt} <span class="has-text-grey">(${p.meta})</span>`;
+    wrapS.querySelectorAll('video').forEach(v=>v.play().catch(()=>{}));
+  }
+  document.getElementById('prevBtn').onclick=()=>{idxS=(idxS-1+scriptPages.length)%scriptPages.length;renderS();};
+  document.getElementById('nextBtn').onclick=()=>{idxS=(idxS+1)%scriptPages.length;renderS();};
+
+  /* -------------- Visuals rendering -------------- */
+  let idxV=0;
+  const wrapV=document.getElementById('visuals-carousel-wrapper'),
+        prV =document.getElementById('visuals-promptBox');
+  async function renderV(){
+    wrapV.innerHTML='<span class="has-text-grey">Loading videos…</span>';
+    const p=visualPages[idxV], f=`assets/scine_visuals/${p.id}/`,
+          mods=await getModels(p.id,f,6,cacheVisuals);
+    wrapV.innerHTML=grid(mods,f,p.id,3);
+    prV.innerHTML = `${p.prompt} <span class="has-text-grey">(${p.meta})</span>`;
+    wrapV.querySelectorAll('video').forEach(v=>v.play().catch(()=>{}));
+  }
+  document.getElementById('prevVisBtn').onclick=()=>{idxV=(idxV-1+visualPages.length)%visualPages.length;renderV();};
+  document.getElementById('nextVisBtn').onclick=()=>{idxV=(idxV+1)%visualPages.length;renderV();};
+
+  /* -------------- Pairwise loader -------------- */
+  let pairIdx=0, pairData=[];
+  fetch('assets/pairwise/pairwise_manifest.json')
+    .then(r=>r.json())
+    .then(json=>{pairData=json; renderPair();})
+    .catch(err=>{
+      document.getElementById('pair-wrapper').innerHTML=
+        `<span class="has-text-danger">Failed to load pairwise data: ${err}</span>`;
+    });
+  document.getElementById('prevPair').onclick=()=>{pairIdx=(pairIdx-1+pairData.length)%pairData.length;renderPair();};
+  document.getElementById('nextPair').onclick=()=>{pairIdx=(pairIdx+1)%pairData.length;renderPair();};
+
+  function metaToHTML(metaText){
+    const rows = metaText.trim().split('\n').map(r=>r.split('|').map(c=>c.trim()));
+    if(rows.length<2) return '<p class="is-size-7 has-text-grey">No metadata.</p>';
+    const th  = rows[0].map(h=>`<th class="px-3 py-1 has-text-left has-text-weight-semibold is-size-7 md:is-size-6 border-b">${h}</th>`).join('');
+    const trs = rows.slice(1).map(r=>`<tr>${r.map(c=>`<td class="px-3 py-1 align-top is-size-7 md:is-size-6 border-b">${c}</td>`).join('')}</tr>`).join('');
+    return `<table class="w-full text-left border-collapse"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table>`;
+  }
+  function renderPair(){
+    if(!pairData.length) return;
+    const p=pairData[pairIdx], base=`assets/pairwise/${p.id}/`;
+    const vid = (file,label)=>`
+      <div class="relative group w-full border border-gray-200 overflow-hidden">
+        <video src="${base}${file}" muted loop playsinline class="object-cover w-full h-64 md:h-80"></video>
+        <span class="absolute inset-x-0 bottom-0 has-background-black-ter has-text-white has-text-centered is-size-7 p-1">
+          ${modelDisplay[label]||label}
+        </span>
+      </div>`;
+    document.getElementById('pair-wrapper').innerHTML = vid(p.videoA,p.modelA) + vid(p.videoB,p.modelB);
+    document.getElementById('pair-prompt').textContent = p.prompt;
+    document.getElementById('pair-meta-body').innerHTML = metaToHTML(p.meta);
+    document.querySelectorAll('#pair-wrapper video').forEach(v=>v.play().catch(()=>{}));
+  }
+
+  /* -------------- Initial renders -------------- */
+  renderS();
+  renderV();
+})();
+
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  /* ------------ Ensure hero IDs exist ------------ */
+  const heroTop = document.querySelector('section.hero:not(.teaser)');
+  if (heroTop && !heroTop.id) heroTop.id = 'overview';
+  const teaser = document.querySelector('section.hero.teaser');
+  if (teaser && !teaser.id) teaser.id = 'taxonomies';
+
+  /* ------------ Build the TOC ------------ */
+  const toc = document.getElementById('page-toc');
+  const list = document.getElementById('page-toc-list');
+  if (!toc || !list) return;
+
+  const items = [
+  { id: 'overview',     label: 'Overview' },
+  { id: 'taxonomies',   label: 'Taxonomies' },
+  { id: 'abstract',     label: 'Abstract' },
+  { id: 'benchmark',    label: 'Benchmark' },
+  { id: 'qualitative',  label: 'Qualitative Results' },
+  { id: 'quantitative', label: 'Quantitative Results' },
+  { id: 'vlm',          label: 'Automatic Evaluator' },
+  { id: 'video-overview',label: 'Video Overview' },
+  { id: 'podcast',      label: 'Podcast' },   
+  { id: 'ack',          label: 'Acknowledgements' },
+  { id: 'bibtex',       label: 'BibTeX' }
+].filter(x => document.getElementById(x.id));
+
+  list.innerHTML = items
+    .map(x => `<li><a href="#${x.id}" data-target="${x.id}">${x.label}</a></li>`)
+    .join('');
+
+  const links = list.querySelectorAll('a[data-target]');
+  function setActive(id){
+    links.forEach(a => a.classList.toggle('is-active', a.getAttribute('data-target') === id));
+  }
+
+  /* ------------ Smooth scroll (no double jump) ------------ */
+  const OFFSET = 90;     // matches your scroll-margin / header height
+  const DURATION = 450;  // ms
+  let isProgrammatic = false;
+
+  function smoothScrollTo(el){
+    const start = window.scrollY;
+    const targetTop = Math.max(0, el.getBoundingClientRect().top + window.scrollY - OFFSET);
+    const delta = targetTop - start;
+    const t0 = performance.now();
+    isProgrammatic = true;
+
+    function step(t){
+      const p = Math.min(1, (t - t0) / DURATION);
+      const e = p < .5 ? 2*p*p : -1 + (4 - 2*p)*p; // easeInOutQuad
+      window.scrollTo(0, start + delta * e);
+      if (p < 1) requestAnimationFrame(step);
+      else setTimeout(() => { isProgrammatic = false; }, 50);
+    }
+    requestAnimationFrame(step);
+  }
+
+  links.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = a.getAttribute('data-target');
+      const el = document.getElementById(id);
+      if (!el) return;
+      // update URL without letting browser perform native jump
+      history.pushState(null, '', '#' + id);
+      setActive(id);
+      smoothScrollTo(el);
+
+      // close ToC on mobile if open
+      const btn = document.getElementById('toc-toggle');
+      if (window.innerWidth <= 1280 && btn) {
+        toc.style.display = 'none';
+        toc.classList.remove('is-mobile-panel');
+        btn.setAttribute('aria-expanded','false');
+    }
+    });
+  });
+
+  /* ------------ Scrollspy (paused during programmatic scroll) ------------ */
+  const observed = items.map(x => document.getElementById(x.id)).filter(Boolean);
+  const obs = new IntersectionObserver((entries) => {
+    if (isProgrammatic) return;
+    // pick the entry nearest the top
+    const vis = entries
+      .filter(e => e.isIntersecting)
+      .sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (vis[0]) setActive(vis[0].target.id);
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: [0, 0.01, 0.25, 0.5] });
+  observed.forEach(el => obs.observe(el));
+
+
+/* ------------ Mobile toggle (bottom sheet) + desktop hide-until-clear ------------ */
+// reuse 'toc' from above
+const toggleBtn = document.getElementById('toc-toggle');
+const heroTopEl = document.querySelector('section.hero:not(.teaser)');
+const teaserEl  = document.querySelector('section.hero.teaser');
+
+
+function setTocVisibility(){
+  if (window.innerWidth > 1280) {
+    // Desktop: sidebar mode
+    toc.classList.remove('is-mobile-panel');
+    toc.style.display = 'block';
+    if (toggleBtn){
+      toggleBtn.style.display = 'none';
+      toggleBtn.setAttribute('aria-expanded','false');
+    }
+    applyDesktopHideRule(); // ensure correct hidden/visible state
+  } else {
+    // Small/medium: FAB + bottom sheet
+    toc.style.display = 'none';
+    if (toggleBtn){
+      toggleBtn.style.display = 'inline-flex';
+      toggleBtn.setAttribute('aria-expanded','false');
+    }
+  }
+}
+
+// Hide sidebar ToC until the user has scrolled past the hero title area
+function applyDesktopHideRule(){
+  if (window.innerWidth <= 1280) {
+    toc.classList.remove('toc-hidden');
+    return;
+  }
+
+  // Heights of both hero sections
+  const h1 = heroTopEl ? heroTopEl.offsetHeight : 0;
+  const h2 = teaserEl  ? teaserEl.offsetHeight  : 0;
+
+  // When scrolled past BOTH (tweak buffer if you want)
+  const clearY = h1 + h2 - 100;
+
+  if (window.scrollY < clearY) toc.classList.add('toc-hidden');
+  else toc.classList.remove('toc-hidden');
+}
+
+
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', () => {
+    const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+    if (expanded) {
+      // Close bottom sheet
+      toc.style.display = 'none';
+      toc.classList.remove('is-mobile-panel');
+      toggleBtn.setAttribute('aria-expanded','false');
+    } else {
+      // Open bottom sheet
+      toc.classList.add('is-mobile-panel');
+      toc.style.display = 'block';
+      toggleBtn.setAttribute('aria-expanded','true');
+    }
+  });
+}
+
+// Close bottom sheet after clicking a link (mobile/tablet)
+document.getElementById('page-toc-list')?.addEventListener('click', (e) => {
+  const link = e.target.closest('a[data-target]');
+  if (!link) return;
+  if (window.innerWidth <= 1280 && toggleBtn){
+    toc.style.display = 'none';
+    toc.classList.remove('is-mobile-panel');
+    toggleBtn.setAttribute('aria-expanded','false');
+  }
+});
+
+window.addEventListener('resize', () => { setTocVisibility(); });
+window.addEventListener('scroll', () => { applyDesktopHideRule(); });
+
+// Run once on load
+setTocVisibility();
+// fonts can change hero height; run again shortly after load
+setTimeout(applyDesktopHideRule, 300);
+
+
+  /* ------------ Activate current hash on load (optional) ------------ */
+  const initial = location.hash && location.hash.slice(1);
+  if (initial && document.getElementById(initial)) {
+    setActive(initial);
+  } else if (items[0]) {
+    setActive(items[0].id);
+  }
+});
+</script> 
+
+</body>
+</html>

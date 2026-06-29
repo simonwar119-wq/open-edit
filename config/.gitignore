@@ -1,0 +1,4 @@
+# 真实密钥永不进版本库
+secrets.env
+*.secret
+.env

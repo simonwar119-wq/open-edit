@@ -1,0 +1,1594 @@
+<!doctype html><html lang="en"><head>
+    <meta charset="utf-8">
+    
+      <title>Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models</title>
+    
+    
+      <link rel="shortcut icon" href="https://company.hpc-ai.com/hubfs/logos/colossal-ai_emblem.svg">
+    
+    <meta name="description" content="Open Sora">
+    
+    
+    
+      
+    
+    
+    
+    
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:description" content="Open Sora">
+    <meta property="og:title" content="Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models">
+    <meta name="twitter:description" content="Open Sora">
+    <meta name="twitter:title" content="Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models">
+
+    
+
+    
+    <style>
+a.cta_button{-moz-box-sizing:content-box !important;-webkit-box-sizing:content-box !important;box-sizing:content-box !important;vertical-align:middle}.hs-breadcrumb-menu{list-style-type:none;margin:0px 0px 0px 0px;padding:0px 0px 0px 0px}.hs-breadcrumb-menu-item{float:left;padding:10px 0px 10px 10px}.hs-breadcrumb-menu-divider:before{content:'›';padding-left:10px}.hs-featured-image-link{border:0}.hs-featured-image{float:right;margin:0 0 20px 20px;max-width:50%}@media (max-width: 568px){.hs-featured-image{float:none;margin:0;width:100%;max-width:100%}}.hs-screen-reader-text{clip:rect(1px, 1px, 1px, 1px);height:1px;overflow:hidden;position:absolute !important;width:1px}
+</style>
+
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/55737161455/1771924118354/template_main.min.css">
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/55737541340/1771924120188/template_blog-post.min.css">
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/55737514431/1771924122154/template_theme-overrides.css">
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/57938769387/1771924112279/template_child.min.css">
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/module_assets/1/55737541577/1744351672140/module_website-header.min.css">
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/module_assets/1/55737517266/1744351668775/module_social-sharing.min.css">
+<link rel="stylesheet" href="/hs/hsstatic/AsyncSupport/static-1.501/sass/comments_listing_asset.css">
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/module_assets/1/55737161689/1744351664478/module_social-follow.min.css">
+<style>
+  @font-face {
+    font-family: "Lexend Deca";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Lexend_Deca/700.woff2") format("woff2"), url("/_hcms/googlefonts/Lexend_Deca/700.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Lexend Deca";
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Lexend_Deca/300.woff2") format("woff2"), url("/_hcms/googlefonts/Lexend_Deca/300.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Lexend Deca";
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Lexend_Deca/500.woff2") format("woff2"), url("/_hcms/googlefonts/Lexend_Deca/500.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Lexend Deca";
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Lexend_Deca/600.woff2") format("woff2"), url("/_hcms/googlefonts/Lexend_Deca/600.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Lexend Deca";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Lexend_Deca/regular.woff2") format("woff2"), url("/_hcms/googlefonts/Lexend_Deca/regular.woff") format("woff");
+  }
+</style>
+
+<!-- Editor Styles -->
+<style id="hs_editor_style" type="text/css">
+.header-row-0-force-full-width-section > .row-fluid {
+  max-width: none !important;
+}
+.footer-row-0-force-full-width-section > .row-fluid {
+  max-width: none !important;
+}
+.widget_1673511094064-flexbox-positioning {
+  display: -ms-flexbox !important;
+  -ms-flex-direction: column !important;
+  -ms-flex-align: center !important;
+  -ms-flex-pack: start;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start;
+}
+.widget_1673511094064-flexbox-positioning > div {
+  max-width: 100%;
+  flex-shrink: 0 !important;
+}
+/* HubSpot Styles (default) */
+.header-row-0-padding {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.footer-row-0-margin {
+  margin-top: -36px !important;
+  margin-bottom: -20px !important;
+}
+.footer-row-0-padding {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.footer-row-1-padding {
+  padding-top: 60px !important;
+  padding-bottom: 20px !important;
+}
+.footer-row-2-padding {
+  padding-top: 20px !important;
+  padding-bottom: 10px !important;
+}
+.cell_16735110941502-margin {
+  margin-top: -2px !important;
+  margin-bottom: -6px !important;
+}
+.cell_1670881298716-margin {
+  margin-bottom: 20px !important;
+}
+.footer-column-6-margin {
+  margin-bottom: 20px !important;
+}
+.footer-column-2-margin {
+  margin-bottom: 20px !important;
+}
+</style>
+    <script type="application/ld+json">
+{
+  "mainEntityOfPage" : {
+    "@type" : "WebPage",
+    "@id" : "https://company.hpc-ai.com/blog/open-sora-v1.0"
+  },
+  "author" : {
+    "name" : "Team",
+    "url" : "https://company.hpc-ai.com/blog/author/team",
+    "@type" : "Person"
+  },
+  "headline" : "Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models",
+  "datePublished" : "2024-03-17T23:45:00.000Z",
+  "dateModified" : "2024-03-19T07:25:26.329Z",
+  "publisher" : {
+    "name" : "HPC-AI Technology Inc.",
+    "logo" : {
+      "url" : "https://company.hpc-ai.com/hubfs/hpc-ai_tech_logo.svg",
+      "@type" : "ImageObject"
+    },
+    "@type" : "Organization"
+  },
+  "@context" : "https://schema.org",
+  "@type" : "BlogPosting",
+  "image" : [ "https://company.hpc-ai.com/hubfs/OPen%20Sora%20(2).png" ]
+}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoObject","contentUrl":"https://26563514.fs1.hubspotusercontent-eu1.net/hubfs/26563514/20240317-223838.mp4","dateModified":"2025-09-08T22:50:54.368Z","duration":"PT28S","height":1080,"name":"20240317-223838","thumbnailUrl":"https://26563514.fs1.hubspotusercontent-eu1.net/hubfs/26563514/20240317-223838.mp4/medium.jpg?t=0","uploadDate":"2024-03-17T14:39:53.956Z","width":1920}</script>
+
+
+    
+
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/57938769387/1771924112279/template_child.min.css">
+<link rel="amphtml" href="https://company.hpc-ai.com/blog/open-sora-v1.0?hs_amp=true">
+
+<meta property="og:image" content="https://company.hpc-ai.com/hubfs/OPen%20Sora%20(2).png">
+<meta property="og:image:width" content="2000">
+<meta property="og:image:height" content="2000">
+
+<meta name="twitter:image" content="https://company.hpc-ai.com/hubfs/OPen%20Sora%20(2).png">
+
+
+<meta property="og:url" content="https://company.hpc-ai.com/blog/open-sora-v1.0">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="canonical" href="https://company.hpc-ai.com/blog/open-sora-v1.0">
+<link rel="stylesheet" href="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/58793258995/1771924123453/template_prism.min.css">
+<meta property="og:type" content="article">
+<link rel="alternate" type="application/rss+xml" href="https://company.hpc-ai.com/blog/rss.xml">
+<meta name="twitter:domain" content="company.hpc-ai.com">
+<meta name="twitter:site" content="@HPCAITech">
+<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    lang: en_US
+</script>
+
+<meta http-equiv="content-language" content="en">
+
+
+
+
+
+
+
+        
+    <script type="application/ld+json">
+      {
+        "@context" : "http://schema.org",
+        "@type" : "Article",
+        "headline" : "Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models",
+        "image": "https://26563514.fs1.hubspotusercontent-eu1.net/hubfs/26563514/OPen%20Sora%20%282%29.png",
+        "author": {
+          "@type": "Person",
+          "name": ["Team"]
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "HPC AI TECHNOLOGY PTE. LTD.",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://26563514.fs1.hubspotusercontent-eu1.net/hubfs/26563514/hpc-ai_tech_logo.svg"
+          }
+        },
+        "description": "Open Sora",  
+        "datePublished": "2024-03-17T23:45:00+0000", 
+        "url" : "https://company.hpc-ai.com/blog/open-sora-v1.0"
+      }
+    </script>    
+  <meta name="generator" content="HubSpot"></head>
+  <body>
+    <div class="body-wrapper   hs-content-id-96584401885 hs-blog-post hs-blog-id-57938768373">
+      
+        <div data-global-resource-path="Colossal AI/templates/partials/header.html"><header class="header">
+
+  
+
+  <a href="#main-content" class="header__skip">Skip to content</a>
+
+  <div class="container-fluid">
+<div class="row-fluid-wrapper">
+<div class="row-fluid">
+<div class="span12 widget-span widget-type-cell " style="" data-widget-type="cell" data-x="0" data-w="12">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-1 dnd-section header-row-0-padding header-row-0-force-full-width-section">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-cell dnd-column" style="" data-widget-type="cell" data-x="0" data-w="12">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-2 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_header-module-1" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+#hs_cos_wrapper_header-module-1 .header__top { background-color:rgba(255,255,255,1.0); }
+
+#hs_cos_wrapper_header-module-1 .header__language-switcher-current-label>span {}
+
+#hs_cos_wrapper_header-module-1 .header__language-switcher:hover .header__language-switcher-current-label>span,
+#hs_cos_wrapper_header-module-1 .header__language-switcher:focus .header__language-switcher-current-label>span {}
+
+#hs_cos_wrapper_header-module-1 .header__language-switcher .lang_list_class li { background-color:rgba(255,255,255,1.0); }
+
+#hs_cos_wrapper_header-module-1 .header__language-switcher .lang_list_class a:hover,
+#hs_cos_wrapper_header-module-1 .header__language-switcher .lang_list_class a:focus { background-color:rgba(255,255,255,1.0); }
+
+#hs_cos_wrapper_header-module-1 .header__language-switcher .lang_list_class a:active {}
+
+#hs_cos_wrapper_header-module-1 .header__menu-link {}
+
+#hs_cos_wrapper_header-module-1 .header__menu-item--depth-1>.header__menu-link:hover,
+#hs_cos_wrapper_header-module-1 .header__menu-item--depth-1>.header__menu-link:focus {}
+
+#hs_cos_wrapper_header-module-1 .header__menu-item--depth-1>.header__menu-link:active {}
+
+#hs_cos_wrapper_header-module-1 .header__menu-item--depth-1>.header__menu-link--active-link {}
+
+#hs_cos_wrapper_header-module-1 .header__menu-submenu { background-color:rgba(225,245,254,1.0); }
+
+#hs_cos_wrapper_header-module-1 .header__menu-submenu .header__menu-link:hover,
+#hs_cos_wrapper_header-module-1 .header__menu-submenu .header__menu-link:focus { background-color:rgba(255,255,255,1.0); }
+
+#hs_cos_wrapper_header-module-1 .button {
+  font-family:'Lexend Deca',sans-serif;
+  font-style:normal;
+  font-weight:normal;
+  text-decoration:none;
+}
+
+#hs_cos_wrapper_header-module-1 .button:hover,
+#hs_cos_wrapper_header-module-1 .button:focus {
+  font-family:'Lexend Deca',sans-serif;
+  font-style:normal;
+  font-weight:normal;
+  text-decoration:none;
+}
+
+#hs_cos_wrapper_header-module-1 .button:active {
+  font-family:'Lexend Deca',sans-serif;
+  font-style:normal;
+  font-weight:normal;
+  text-decoration:none;
+}
+
+</style>
+
+
+
+
+
+
+
+
+  <div class="header__container header__container--left">
+
+    
+    <div class="header__bottom">
+      <div class="header__wrapper header__wrapper--bottom">
+        <div class="header__logo-col">
+          
+
+  
+    
+  
+
+  <div class="header__logo">
+
+    
+      <a class="header__logo-link" href="/">
+    
+
+      
+
+      
+
+        <img class="header__logo-image" src="https://company.hpc-ai.com/hubfs/hpc-ai_tech_logo.svg" loading="eager" alt="HPC-AI Tech" height="0" width="0">
+
+      
+
+      
+
+    
+      </a>
+    
+
+  </div>
+
+
+        </div>
+        <div class="header__menu-col">
+          
+
+  <nav class="header__menu header__menu--desktop" aria-label="Desktop navigation">
+    <ul class="header__menu-wrapper no-list">
+      
+
+  
+
+  
+
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://hpc-ai.com/">Cloud</a>
+      
+    </li>
+  
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/contact">Enterprise Service</a>
+      
+    </li>
+  
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1 header__menu-item--has-submenu hs-skip-lang-url-rewrite">
+      <a class="header__menu-link header__menu-link--toggle " href="" aria-haspopup="true" aria-expanded="false">Resources</a>
+      
+        
+          <button class="header__menu-child-toggle no-button" aria-expanded="false">
+            <span class="show-for-sr">Show submenu for Resources</span>
+              <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-hidden="true"><g id="chevron-down1_layer"><path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z" /></g></svg>
+          </button>
+          <ul class="header__menu-submenu header__menu-submenu--level-2 no-list">
+            
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/blog">Blog</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://github.com/hpcaitech">GitHub</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://raw.githubusercontent.com/hpcaitech/public_assets/main/colossalai/img/WeChat.png">WeChat</a>
+      
+    </li>
+  
+            
+          </ul>
+        
+      
+    </li>
+  
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1 header__menu-item--has-submenu hs-skip-lang-url-rewrite">
+      <a class="header__menu-link header__menu-link--toggle " href="" aria-haspopup="true" aria-expanded="false">Company</a>
+      
+        
+          <button class="header__menu-child-toggle no-button" aria-expanded="false">
+            <span class="show-for-sr">Show submenu for Company</span>
+              <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-hidden="true"><g id="chevron-down2_layer"><path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z" /></g></svg>
+          </button>
+          <ul class="header__menu-submenu header__menu-submenu--level-2 no-list">
+            
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/company">About Us</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/services">Services</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/company/careers">Careers</a>
+      
+    </li>
+  
+            
+          </ul>
+        
+      
+    </li>
+  
+  
+
+
+    </ul>
+  </nav>
+
+
+          
+
+  <div class="header__menu-container header__menu-container--mobile">
+    <button class="header__menu-toggle header__menu-toggle--open header__menu-toggle--show no-button">
+      <span class="show-for-sr">Open main navigation</span>
+      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" width="24" aria-hidden="true"><g id="bars3_layer"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z" /></g></svg>
+    </button>
+    <button class="header__menu-toggle header__menu-toggle--close no-button">
+      <span class="show-for-sr">Close main navigation</span>
+      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 384 512" width="24" aria-hidden="true"><g id="times4_layer"><path d="M323.1 441l53.9-53.9c9.4-9.4 9.4-24.5 0-33.9L279.8 256l97.2-97.2c9.4-9.4 9.4-24.5 0-33.9L323.1 71c-9.4-9.4-24.5-9.4-33.9 0L192 168.2 94.8 71c-9.4-9.4-24.5-9.4-33.9 0L7 124.9c-9.4 9.4-9.4 24.5 0 33.9l97.2 97.2L7 353.2c-9.4 9.4-9.4 24.5 0 33.9L60.9 441c9.4 9.4 24.5 9.4 33.9 0l97.2-97.2 97.2 97.2c9.3 9.3 24.5 9.3 33.9 0z" /></g></svg>
+    </button>
+    <nav class="header__menu header__menu--mobile" aria-label="Mobile navigation">
+      <ul class="header__menu-wrapper no-list">
+        
+
+  
+
+  
+
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://hpc-ai.com/">Cloud</a>
+      
+    </li>
+  
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/contact">Enterprise Service</a>
+      
+    </li>
+  
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1 header__menu-item--has-submenu hs-skip-lang-url-rewrite">
+      <a class="header__menu-link header__menu-link--toggle " href="" aria-haspopup="true" aria-expanded="false">Resources</a>
+      
+        
+          <button class="header__menu-child-toggle no-button" aria-expanded="false">
+            <span class="show-for-sr">Show submenu for Resources</span>
+              <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-hidden="true"><g id="chevron-down5_layer"><path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z" /></g></svg>
+          </button>
+          <ul class="header__menu-submenu header__menu-submenu--level-2 no-list">
+            
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/blog">Blog</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://github.com/hpcaitech">GitHub</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://raw.githubusercontent.com/hpcaitech/public_assets/main/colossalai/img/WeChat.png">WeChat</a>
+      
+    </li>
+  
+            
+          </ul>
+        
+      
+    </li>
+  
+  
+    
+    <li class="header__menu-item header__menu-item--depth-1 header__menu-item--has-submenu hs-skip-lang-url-rewrite">
+      <a class="header__menu-link header__menu-link--toggle " href="" aria-haspopup="true" aria-expanded="false">Company</a>
+      
+        
+          <button class="header__menu-child-toggle no-button" aria-expanded="false">
+            <span class="show-for-sr">Show submenu for Company</span>
+              <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-hidden="true"><g id="chevron-down6_layer"><path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z" /></g></svg>
+          </button>
+          <ul class="header__menu-submenu header__menu-submenu--level-2 no-list">
+            
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/company">About Us</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/services">Services</a>
+      
+    </li>
+  
+            
+              
+    <li class="header__menu-item header__menu-item--depth-2  hs-skip-lang-url-rewrite">
+      <a class="header__menu-link  " href="https://company.hpc-ai.com/company/careers">Careers</a>
+      
+    </li>
+  
+            
+          </ul>
+        
+      
+    </li>
+  
+  
+
+
+        
+        
+          <li class="header__menu-item header__menu-item--button header__menu-item--depth-1 hs-skip-lang-url-rewrite">
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+  
+  
+  
+  
+
+  <a href="https://company.hpc-ai.com/contact" class="header__button button button--secondary button--small ">
+
+    
+    Talk to an expert
+
+  </a>
+
+</li>
+        
+      </ul>
+    </nav>
+  </div>
+
+
+        </div>
+        
+          <div class="header__button-col hidden-phone">
+            
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+  
+  
+  
+  
+
+  <a href="https://company.hpc-ai.com/contact" class="header__button button button--secondary button--small ">
+
+    
+    Talk to an expert
+
+  </a>
+
+
+          </div>
+        
+      </div>
+    </div>
+
+  </div>
+
+
+
+</div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+</div>
+</div>
+</div>
+
+</header></div>
+      
+
+      
+      <main id="main-content">
+        
+
+
+
+<div class="content-wrapper">
+
+  
+
+  <div class="blog-post__column-wrapper">
+
+    <div class="blog-post__left-sidebar">
+      <a class="btn__back-to-posts" href="https://company.hpc-ai.com/blog/">
+        All posts
+      </a>     
+    </div>
+  
+    <div class="blog-post-section">
+      <article class="blog-post">
+        <time datetime="2024-03-17 23:45:00" class="blog-post__timestamp">
+          March 17, 2024
+        </time>
+        <h1 class="blog-post__headline"><span id="hs_cos_wrapper_name" class="hs_cos_wrapper hs_cos_wrapper_meta_field hs_cos_wrapper_type_text" style="" data-hs-cos-general-type="meta_field" data-hs-cos-type="text">Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models</span></h1>
+        <div class="blog-post__meta">
+          <div class="blog-post__author">         
+            <span class="reading-minutes">
+              
+              
+              
+              
+
+              
+                6 minute read
+              
+            </span>          
+          </div>        
+        </div>
+        
+        <div class="blog-post__image-wrapper">
+          <img class="blog-post__image" src="https://company.hpc-ai.com/hubfs/OPen%20Sora%20(2).png" width="100%" loading="eager" alt="">
+        </div>
+        
+        <div class="blog-post__body">
+          <span id="hs_cos_wrapper_post_body" class="hs_cos_wrapper hs_cos_wrapper_meta_field hs_cos_wrapper_type_rich_text" style="" data-hs-cos-general-type="meta_field" data-hs-cos-type="rich_text"><div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div>Not long ago OpenAI Sora quickly became popular with its amazing video generation effect, standing out among a bunch of Text-to-Video models and becoming the focus of global attention. Following the launch of the Sora Replication for both training and inference process with 46% cost reduction 2 weeks ago, the Colossal-AI team has a new open source solution, "Open-Sora 1.0", which covers <strong><span style="color: #20499e;">the entire training process</span>,</strong> including <strong><span style="color: #20499e;">data processing, all training details and model checkpoints</span></strong>, to join hands with AI enthusiasts around the world to advance a new era of video creation.</div>
+<div>Let's take a first look at a <span style="color: #20499e;"><strong>video of a bustling urban night scene generated by the "Open-Sora 1.0" model released by the Colossal-AI team</strong></span>.</div>
+<div>&nbsp;</div>
+</div>
+<!--more-->
+<p style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/1-%E8%A1%97%E6%99%AF.gif?width=512&amp;height=512&amp;name=1-%E8%A1%97%E6%99%AF.gif" width="512" height="512" loading="lazy" alt="1-街景" style="height: auto; max-width: 100%; width: 512px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/1-%E8%A1%97%E6%99%AF.gif?width=256&amp;height=256&amp;name=1-%E8%A1%97%E6%99%AF.gif 256w, https://company.hpc-ai.com/hs-fs/hubfs/1-%E8%A1%97%E6%99%AF.gif?width=512&amp;height=512&amp;name=1-%E8%A1%97%E6%99%AF.gif 512w, https://company.hpc-ai.com/hs-fs/hubfs/1-%E8%A1%97%E6%99%AF.gif?width=768&amp;height=768&amp;name=1-%E8%A1%97%E6%99%AF.gif 768w, https://company.hpc-ai.com/hs-fs/hubfs/1-%E8%A1%97%E6%99%AF.gif?width=1024&amp;height=1024&amp;name=1-%E8%A1%97%E6%99%AF.gif 1024w, https://company.hpc-ai.com/hs-fs/hubfs/1-%E8%A1%97%E6%99%AF.gif?width=1280&amp;height=1280&amp;name=1-%E8%A1%97%E6%99%AF.gif 1280w, https://company.hpc-ai.com/hs-fs/hubfs/1-%E8%A1%97%E6%99%AF.gif?width=1536&amp;height=1536&amp;name=1-%E8%A1%97%E6%99%AF.gif 1536w" sizes="(max-width: 512px) 100vw, 512px"></p>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div style="font-size: 16px; text-align: center;"><span style="color: #999999;">Open-Sora 1.0 generated cityscapes</span></div>
+<div style="font-size: 16px; text-align: center;"><span style="color: #999999;">&nbsp;</span></div>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div>This is just the tip of the iceberg of <span>Open-Sora technology</span>. Colossal-AI team has fully open-sourced the <span style="color: #20499e;"><strong>model architecture, </strong> </span><strong><span style="color: #20499e;">trained model checkpoints, details of all the training and data preparation processes, video demos and tutorials</span> </strong>in our GitHub for everyone interested in Text-to-Video models to freely learn and use. We will continue to update Open-Sora related solutions and the latest developments. We will be consistently updating Open-Sora solutions and the latest news in this GitHub repo and welcome everyone to stay tuned for updates!</div>
+<ul>
+<li data-list="bullet">
+<div><strong>Open-Sora </strong><strong>open source</strong><strong> address: </strong><a href="https://github.com/hpcaitech/Open-Sora" rel="noopener"><span style="color: #20499e;"><strong>https://github.com/hpcaitech/Open-Sora</strong></span></a></div>
+</li>
+</ul>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<h1 style="font-size: 30px;"><strong>Comprehensive Explanation of Open Sora</strong></h1>
+<div>Next, we will provide an in-depth explanation of multiple key dimensions of the Sora reproduction scheme, including model architecture design, training reproduction scheme, data preprocessing, model output demonstration, and efficient training optimization strategies.</div>
+<div>&nbsp;</div>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<h2 style="font-size: 24px;">Model Architecture Design</h2>
+<div>Our model utilizes the currently popular Diffusion Transformer (DiT) [1] architecture. We use PixArt-α [2], a high-quality open-source text-to-image model that also uses the DiT architecture as a base, and extend it to generate video by adding a temporal attention layer. Specifically, the entire architecture consists of a pre-trained VAE, a text encoder, and an STDiT (Spatial Temporal Diffusion Transformer) model that utilizes the spatial-temporal attention mechanism. The structure of each layer of STDiT is shown below. It uses a serial approach to superimpose a 1D temporal attention module on a 2D spatial attention module for modelling temporal relationships. After the temporal attention module, the cross-attention module is used to align the semantics of the text. Compared to the full-attention mechanism, such a structure greatly reduces training and inference costs. Compared to the Latte [3] model, which also uses a spatial-temporal attention mechanism, STDiT can better utilize the weights of the pre-trained image DiTs to continue training on video data.</div>
+<div>&nbsp;</div>
+</div>
+<p style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/33333.jpg?width=372&amp;height=612&amp;name=33333.jpg" width="372" height="612" loading="lazy" alt="33333" style="height: auto; max-width: 100%; width: 372px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/33333.jpg?width=186&amp;height=306&amp;name=33333.jpg 186w, https://company.hpc-ai.com/hs-fs/hubfs/33333.jpg?width=372&amp;height=612&amp;name=33333.jpg 372w, https://company.hpc-ai.com/hs-fs/hubfs/33333.jpg?width=558&amp;height=918&amp;name=33333.jpg 558w, https://company.hpc-ai.com/hs-fs/hubfs/33333.jpg?width=744&amp;height=1224&amp;name=33333.jpg 744w, https://company.hpc-ai.com/hs-fs/hubfs/33333.jpg?width=930&amp;height=1530&amp;name=33333.jpg 930w, https://company.hpc-ai.com/hs-fs/hubfs/33333.jpg?width=1116&amp;height=1836&amp;name=33333.jpg 1116w" sizes="(max-width: 372px) 100vw, 372px"></p>
+<div data-zone-id="0" data-line-index="0" data-line="true" style="font-size: 16px; text-align: center;"><span style="color: #999999;">STDiT Model Structure Schematic</span></div>
+<div data-zone-id="0" data-line-index="0" data-line="true" style="font-size: 16px; text-align: center;"><span style="color: #999999;">&nbsp;</span></div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div>The training and inference process of the whole model is as follows. In the training stage, we first use a pre-trained VAE(Variational Autoencoder) encoder to compress the video data, and then train our proposed STDiT model with text embedding in the latent space after compression. In the inference stage, we randomly sample a Gaussian noise from the latent space of the VAE and input it into the STDiT together with the prompt embedding to get the features after denoising, and finally input it into the VAE decoder to get the video.</div>
+<div>&nbsp;</div>
+</div>
+<p style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/%E5%9B%BE2.png?width=828&amp;height=161&amp;name=%E5%9B%BE2.png" width="828" height="161" loading="lazy" alt="图2" style="height: auto; max-width: 100%; width: 828px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/%E5%9B%BE2.png?width=414&amp;height=81&amp;name=%E5%9B%BE2.png 414w, https://company.hpc-ai.com/hs-fs/hubfs/%E5%9B%BE2.png?width=828&amp;height=161&amp;name=%E5%9B%BE2.png 828w, https://company.hpc-ai.com/hs-fs/hubfs/%E5%9B%BE2.png?width=1242&amp;height=242&amp;name=%E5%9B%BE2.png 1242w, https://company.hpc-ai.com/hs-fs/hubfs/%E5%9B%BE2.png?width=1656&amp;height=322&amp;name=%E5%9B%BE2.png 1656w, https://company.hpc-ai.com/hs-fs/hubfs/%E5%9B%BE2.png?width=2070&amp;height=403&amp;name=%E5%9B%BE2.png 2070w, https://company.hpc-ai.com/hs-fs/hubfs/%E5%9B%BE2.png?width=2484&amp;height=483&amp;name=%E5%9B%BE2.png 2484w" sizes="(max-width: 828px) 100vw, 828px"></p>
+<div data-zone-id="0" data-line-index="0" data-line="true" style="font-size: 16px; text-align: center;"><span style="color: #999999;">Model Training Process</span></div>
+<div data-zone-id="0" data-line-index="0" data-line="true" style="font-size: 16px; text-align: center;"><span style="color: #999999;">&nbsp;</span></div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<h2 style="font-size: 24px;">Training Reproduction Scheme</h2>
+<div>Open-Sora's reproduction scheme references the Stable Video Diffusion (SVD) [3] work and consists of three phases, namely:</div>
+<ol start="1">
+<li data-list="number">
+<div><a href="#firststage" rel="noopener"><span style="color: #20499e;">Large-scale image pre-training;</span></a></div>
+</li>
+<li data-list="number">
+<div><a href="#secondstage" rel="noopener"><span style="color: #20499e;">Large-scale video pre-training;</span></a></div>
+</li>
+<li data-list="number">
+<div><a href="#thirdstage" rel="noopener"><span style="color: #20499e;">High-quality video data fine-tuning.</span></a></div>
+</li>
+</ol>
+<div>Each stage continues training based on the weights of the previous stage. Compared to single-stage training from scratch, multi-stage training achieves the goal of high-quality video generation more efficiently by gradually expanding the data.</div>
+<div>&nbsp;</div>
+<div style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif?width=1600&amp;height=400&amp;name=High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif" width="1600" height="400" loading="lazy" alt="High-performance and low-cost implementations Validated performance, easy-to-use solutions Technical support and expertized assistance (1600 x 900 像素) (5)" style="height: auto; max-width: 100%; width: 1600px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif?width=800&amp;height=200&amp;name=High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif 800w, https://company.hpc-ai.com/hs-fs/hubfs/High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif?width=1600&amp;height=400&amp;name=High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif 1600w, https://company.hpc-ai.com/hs-fs/hubfs/High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif?width=2400&amp;height=600&amp;name=High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif 2400w, https://company.hpc-ai.com/hs-fs/hubfs/High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif?width=3200&amp;height=800&amp;name=High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif 3200w, https://company.hpc-ai.com/hs-fs/hubfs/High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif?width=4000&amp;height=1000&amp;name=High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif 4000w, https://company.hpc-ai.com/hs-fs/hubfs/High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif?width=4800&amp;height=1200&amp;name=High-performance%20and%20low-cost%20implementations%20Validated%20performance%2c%20easy-to-use%20solutions%20Technical%20support%20and%20expertized%20assistance%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0)%20(5).gif 4800w" sizes="(max-width: 1600px) 100vw, 1600px"></div>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false"><a id="firststage" data-hs-anchor="true"></a>
+<ul>
+<li data-list="bullet">
+<div><span style="color: #20499e;"><strong>First Stage: Large-scale image pre-training</strong></span></div>
+</li>
+</ul>
+<div>The first stage effectively reduces the cost of video pre-training through large-scale image pre-training with the help of a mature Text-to-Image model.</div>
+<div>With the abundant large-scale image data on the Internet and advanced Text-to-Image technology, we can train a high-quality Text-to-Image model, which will be used as the initialization weights for the next stage of video pre-training. Meanwhile, since there is no high-quality spatio-temporal VAE, we utilize the Stable Diffusion [5] model to pre-train the spatial VAE. This strategy not only guarantees the superior performance of the initial model but also significantly reduces the overall cost of video pre-training.</div>
+<a id="secondstage" data-hs-anchor="true"></a>
+<ul>
+<li data-list="bullet">
+<div><strong><span style="color: #20499e;">Second Stage: Large-scale video pre-training</span></strong></div>
+</li>
+</ul>
+<div>The second phase performs large-scale video pre-training to increase the model's generalization ability and effectively grasp the time series association of videos.</div>
+<div>This phase requires the use of a large amount of video data training to ensure the diversity of video topics, thus increasing the generalization ability of the model. The model in the second stage adds a temporal sequence attention module to the first stage Test-to-Image model for learning the temporal relationships in videos. The rest of the modules are kept the same as the first stage and loaded with the first stage weights as initialization while initializing the output of the temporal attention module to zero for more efficient and faster convergence. We used the open source weights of PixArt-α [2] as initialization for the second stage STDiT model, as well as adopted the T5 [6] model as the text encoder. Meanwhile, we used a small resolution of 256x256 for pre-training, which further increases convergence speed and reduces the training cost.</div>
+<a id="thirdstage" data-hs-anchor="true"></a>
+<ul>
+<li data-list="bullet">
+<div><strong><span style="color: #20499e;">Third Stage: High-quality video data fine-tuning</span></strong></div>
+</li>
+</ul>
+<div>The third phase fine-tunes the high-quality video data to significantly improve the quality of the video generated.</div>
+<div>The size of the video data used in the third phase is an order of magnitude less than in the second phase, but the video is of higher duration, resolution, and quality. By fine-tuning in this way, we achieve efficient scaling of video generation from short to long, from low to high resolution, and from low to high fidelity.</div>
+</div>
+<p>&nbsp;</p>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div>In our reproduction process, we used 64 H800 GPUs for training. The training volume for the second phase totalled 2,808 GPU hours, which is about $7,000, and the training volume for the third phase was 1,920 GPU hours, which is about $4,500, and we successfully <strong>kept the Open-Sora reproduction process at about $10,000 USD</strong>.</div>
+<div>&nbsp;</div>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<h2 style="font-size: 24px;">Data Preprocessing</h2>
+<div>To further reduce the barrier and complexity of Sora replication, the Colossal-AI team also provides convenient video data preprocessing scripts in the code repository, including public video dataset download, long video segmentation into short video clips based on shot continuity, and using the open source big language model LLaVA [7] to generate fine-grained cue words, so that you can easily start Sora replication pre-training. The batch video caption generation code we provide can annotate a video using two GPUs in 3 seconds and the quality is close to GPT-4V. The final video-text pairs can be directly used for training. With the code we provide, users can easily and quickly generate the video-text pairs required for training on their own datasets, significantly reducing the technical barrier and prep for starting a Sora replication project.</div>
+<div>&nbsp;</div>
+</div>
+<p style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/e96e5b90dff018bbacf1566e41fddb02.gif?width=1536&amp;height=864&amp;name=e96e5b90dff018bbacf1566e41fddb02.gif" width="1536" height="864" loading="lazy" alt="e96e5b90dff018bbacf1566e41fddb02" style="height: auto; max-width: 100%; width: 1536px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/e96e5b90dff018bbacf1566e41fddb02.gif?width=768&amp;height=432&amp;name=e96e5b90dff018bbacf1566e41fddb02.gif 768w, https://company.hpc-ai.com/hs-fs/hubfs/e96e5b90dff018bbacf1566e41fddb02.gif?width=1536&amp;height=864&amp;name=e96e5b90dff018bbacf1566e41fddb02.gif 1536w, https://company.hpc-ai.com/hs-fs/hubfs/e96e5b90dff018bbacf1566e41fddb02.gif?width=2304&amp;height=1296&amp;name=e96e5b90dff018bbacf1566e41fddb02.gif 2304w, https://company.hpc-ai.com/hs-fs/hubfs/e96e5b90dff018bbacf1566e41fddb02.gif?width=3072&amp;height=1728&amp;name=e96e5b90dff018bbacf1566e41fddb02.gif 3072w, https://company.hpc-ai.com/hs-fs/hubfs/e96e5b90dff018bbacf1566e41fddb02.gif?width=3840&amp;height=2160&amp;name=e96e5b90dff018bbacf1566e41fddb02.gif 3840w, https://company.hpc-ai.com/hs-fs/hubfs/e96e5b90dff018bbacf1566e41fddb02.gif?width=4608&amp;height=2592&amp;name=e96e5b90dff018bbacf1566e41fddb02.gif 4608w" sizes="(max-width: 1536px) 100vw, 1536px"></p>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div style="text-align: center; font-size: 16px;"><span style="color: #999999;">Automatically generated video/text pairs based on data preprocessing scripts</span></div>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<h1 style="font-size: 30px;">&nbsp;</h1>
+<h1 style="font-size: 30px;"><strong>Video Demos</strong></h1>
+<div>Let's take a look at Open-Sora's actual video generation results. For example, let's let Open-Sora generate an aerial footage of the sea lapping against the rocks by the cliff coast.</div>
+<div>&nbsp;</div>
+</div>
+<p style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif?width=512&amp;height=512&amp;name=4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif" width="512" height="512" loading="lazy" alt="4-悬崖海岸" style="height: auto; max-width: 100%; width: 512px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif?width=256&amp;height=256&amp;name=4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif 256w, https://company.hpc-ai.com/hs-fs/hubfs/4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif?width=512&amp;height=512&amp;name=4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif 512w, https://company.hpc-ai.com/hs-fs/hubfs/4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif?width=768&amp;height=768&amp;name=4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif 768w, https://company.hpc-ai.com/hs-fs/hubfs/4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif?width=1024&amp;height=1024&amp;name=4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif 1024w, https://company.hpc-ai.com/hs-fs/hubfs/4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif?width=1280&amp;height=1280&amp;name=4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif 1280w, https://company.hpc-ai.com/hs-fs/hubfs/4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif?width=1536&amp;height=1536&amp;name=4-%E6%82%AC%E5%B4%96%E6%B5%B7%E5%B2%B8.gif 1536w" sizes="(max-width: 512px) 100vw, 512px"></p>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="true">
+<div>Then let our Open-Sora capture the magnificent bird's eye view of a mountain waterfall surging down a cliff and eventually merging into a lake.</div>
+<div>&nbsp;</div>
+<div style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/5-%E7%80%91%E5%B8%83.gif?width=512&amp;height=512&amp;name=5-%E7%80%91%E5%B8%83.gif" width="512" height="512" loading="lazy" alt="5-瀑布" style="height: auto; max-width: 100%; width: 512px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/5-%E7%80%91%E5%B8%83.gif?width=256&amp;height=256&amp;name=5-%E7%80%91%E5%B8%83.gif 256w, https://company.hpc-ai.com/hs-fs/hubfs/5-%E7%80%91%E5%B8%83.gif?width=512&amp;height=512&amp;name=5-%E7%80%91%E5%B8%83.gif 512w, https://company.hpc-ai.com/hs-fs/hubfs/5-%E7%80%91%E5%B8%83.gif?width=768&amp;height=768&amp;name=5-%E7%80%91%E5%B8%83.gif 768w, https://company.hpc-ai.com/hs-fs/hubfs/5-%E7%80%91%E5%B8%83.gif?width=1024&amp;height=1024&amp;name=5-%E7%80%91%E5%B8%83.gif 1024w, https://company.hpc-ai.com/hs-fs/hubfs/5-%E7%80%91%E5%B8%83.gif?width=1280&amp;height=1280&amp;name=5-%E7%80%91%E5%B8%83.gif 1280w, https://company.hpc-ai.com/hs-fs/hubfs/5-%E7%80%91%E5%B8%83.gif?width=1536&amp;height=1536&amp;name=5-%E7%80%91%E5%B8%83.gif 1536w" sizes="(max-width: 512px) 100vw, 512px"></div>
+<div style="text-align: center;">
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div style="text-align: left;">&nbsp;</div>
+<div style="text-align: left;">In addition to the sky, we can also generate videos about the sea. With a simple input prompt, we let Open-Sore generate a video about a sea turtle in the coral reefs swimming leisurely.</div>
+<div style="text-align: left;">&nbsp;</div>
+<div style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/6-%E6%B5%B7%E9%BE%9F.gif?width=512&amp;height=512&amp;name=6-%E6%B5%B7%E9%BE%9F.gif" width="512" height="512" loading="lazy" alt="6-海龟" style="height: auto; max-width: 100%; width: 512px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/6-%E6%B5%B7%E9%BE%9F.gif?width=256&amp;height=256&amp;name=6-%E6%B5%B7%E9%BE%9F.gif 256w, https://company.hpc-ai.com/hs-fs/hubfs/6-%E6%B5%B7%E9%BE%9F.gif?width=512&amp;height=512&amp;name=6-%E6%B5%B7%E9%BE%9F.gif 512w, https://company.hpc-ai.com/hs-fs/hubfs/6-%E6%B5%B7%E9%BE%9F.gif?width=768&amp;height=768&amp;name=6-%E6%B5%B7%E9%BE%9F.gif 768w, https://company.hpc-ai.com/hs-fs/hubfs/6-%E6%B5%B7%E9%BE%9F.gif?width=1024&amp;height=1024&amp;name=6-%E6%B5%B7%E9%BE%9F.gif 1024w, https://company.hpc-ai.com/hs-fs/hubfs/6-%E6%B5%B7%E9%BE%9F.gif?width=1280&amp;height=1280&amp;name=6-%E6%B5%B7%E9%BE%9F.gif 1280w, https://company.hpc-ai.com/hs-fs/hubfs/6-%E6%B5%B7%E9%BE%9F.gif?width=1536&amp;height=1536&amp;name=6-%E6%B5%B7%E9%BE%9F.gif 1536w" sizes="(max-width: 512px) 100vw, 512px"></div>
+</div>
+<span data-lark-record-data="{&quot;rootId&quot;:&quot;BiendQnVToQDY0xgDrJcOhbynJY&quot;,&quot;text&quot;:{&quot;initialAttributedTexts&quot;:{&quot;text&quot;:{&quot;0&quot;:&quot;In addition to the sky, we can also generate videos about the sea. With simple input prompt, we let Open-Sore generate a video about a sea turtle in the coral reefs swimming leisurely.&quot;},&quot;attribs&quot;:{&quot;0&quot;:&quot;*0+54&quot;}},&quot;apool&quot;:{&quot;numToAttrib&quot;:{&quot;0&quot;:[&quot;author&quot;,&quot;7229131137478279170&quot;]},&quot;nextNum&quot;:1}},&quot;type&quot;:&quot;text&quot;,&quot;referenceRecordMap&quot;:{},&quot;extra&quot;:{&quot;mention_page_title&quot;:{},&quot;external_mention_url&quot;:{}},&quot;isKeepQuoteContainer&quot;:false,&quot;isFromCode&quot;:false,&quot;selection&quot;:[{&quot;id&quot;:43,&quot;type&quot;:&quot;text&quot;,&quot;selection&quot;:{&quot;start&quot;:0,&quot;end&quot;:184},&quot;recordId&quot;:&quot;SI1PdfmT7o5j8uxjisLcfEclnvf&quot;}],&quot;payloadMap&quot;:{},&quot;isCut&quot;:false}" data-lark-record-format="docx/text"></span></div>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div>&nbsp;</div>
+<div>Open-Sora is also able to show us the Milky Way in all its starry splendor through time-lapse photography.</div>
+<div>&nbsp;</div>
+</div>
+<p style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/7-%E6%98%9F%E7%A9%BA.gif?width=512&amp;height=512&amp;name=7-%E6%98%9F%E7%A9%BA.gif" width="512" height="512" loading="lazy" alt="7-星空" style="height: auto; max-width: 100%; width: 512px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/7-%E6%98%9F%E7%A9%BA.gif?width=256&amp;height=256&amp;name=7-%E6%98%9F%E7%A9%BA.gif 256w, https://company.hpc-ai.com/hs-fs/hubfs/7-%E6%98%9F%E7%A9%BA.gif?width=512&amp;height=512&amp;name=7-%E6%98%9F%E7%A9%BA.gif 512w, https://company.hpc-ai.com/hs-fs/hubfs/7-%E6%98%9F%E7%A9%BA.gif?width=768&amp;height=768&amp;name=7-%E6%98%9F%E7%A9%BA.gif 768w, https://company.hpc-ai.com/hs-fs/hubfs/7-%E6%98%9F%E7%A9%BA.gif?width=1024&amp;height=1024&amp;name=7-%E6%98%9F%E7%A9%BA.gif 1024w, https://company.hpc-ai.com/hs-fs/hubfs/7-%E6%98%9F%E7%A9%BA.gif?width=1280&amp;height=1280&amp;name=7-%E6%98%9F%E7%A9%BA.gif 1280w, https://company.hpc-ai.com/hs-fs/hubfs/7-%E6%98%9F%E7%A9%BA.gif?width=1536&amp;height=1536&amp;name=7-%E6%98%9F%E7%A9%BA.gif 1536w" sizes="(max-width: 512px) 100vw, 512px"></p>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div>If you have more interesting ideas for video generation, welcome to our Open-Sora open-source community to get model weights for free experience.</div>
+<div>Link: <span style="color: #20499e;"><strong>https://</strong><strong>github.com/hpcaitech/Open-Sora</strong></span></div>
+<div><span style="color: #20499e;">&nbsp;</span></div>
+<div>It is worth noting that our current version only uses 400K of training data, and the model's generation quality and ability of text following could be improved. For example, in the turtle video above, the generated turtle has an extra foot. Open-Sora 1.0 is also not very good at generating portraits and complex images. We have a list of plans on GitHub and will continue to address the existing bugs and improve the quality of the generation.</div>
+<div>&nbsp;</div>
+<h1 style="font-size: 30px;"><strong>Efficient Training</strong></h1>
+<div>In addition to significantly lowering the technical threshold of Sora reproduction and improving the quality of video generation in multiple dimensions such as duration, resolution, and content, we also provide Colossal-AI acceleration system for efficient training. Through efficient training strategies such as kernel optimization and hybrid parallelism, we achieve <span style="color: #20499e;"><strong>1.55x acceleration</strong></span> in training for processing 64-frame, 512x512 resolution videos. Meanwhile, thanks to Colossal-AI's heterogeneous memory management system, we can <span style="color: #20499e;"><strong>perform a 1-minute 1080p HD video training task</strong></span> on a single server (8*H800) <strong><span style="color: #20499e;">without any hindrance</span>.</strong></div>
+<div>&nbsp;</div>
+</div>
+<p style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/1111.jpg?width=1055&amp;height=590&amp;name=1111.jpg" width="1055" height="590" loading="lazy" alt="1111" style="height: auto; max-width: 100%; width: 1055px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/1111.jpg?width=528&amp;height=295&amp;name=1111.jpg 528w, https://company.hpc-ai.com/hs-fs/hubfs/1111.jpg?width=1055&amp;height=590&amp;name=1111.jpg 1055w, https://company.hpc-ai.com/hs-fs/hubfs/1111.jpg?width=1583&amp;height=885&amp;name=1111.jpg 1583w, https://company.hpc-ai.com/hs-fs/hubfs/1111.jpg?width=2110&amp;height=1180&amp;name=1111.jpg 2110w, https://company.hpc-ai.com/hs-fs/hubfs/1111.jpg?width=2638&amp;height=1475&amp;name=1111.jpg 2638w, https://company.hpc-ai.com/hs-fs/hubfs/1111.jpg?width=3165&amp;height=1770&amp;name=1111.jpg 3165w" sizes="(max-width: 1055px) 100vw, 1055px"></p>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<div>In addition, our proposed STDiT model architecture demonstrates superior efficiency during training. Compared to DiT with a full-attention mechanism, <span style="color: #20499e;"><strong>STDiT achieves up to 5x speedup</strong></span> as the number of frames increases, which is especially critical in real-world tasks such as processing long video sequences.</div>
+<div>&nbsp;</div>
+<div style="text-align: center;"><img src="https://company.hpc-ai.com/hs-fs/hubfs/222.jpg?width=1053&amp;height=590&amp;name=222.jpg" width="1053" height="590" loading="lazy" alt="222" style="height: auto; max-width: 100%; width: 1053px;" srcset="https://company.hpc-ai.com/hs-fs/hubfs/222.jpg?width=527&amp;height=295&amp;name=222.jpg 527w, https://company.hpc-ai.com/hs-fs/hubfs/222.jpg?width=1053&amp;height=590&amp;name=222.jpg 1053w, https://company.hpc-ai.com/hs-fs/hubfs/222.jpg?width=1580&amp;height=885&amp;name=222.jpg 1580w, https://company.hpc-ai.com/hs-fs/hubfs/222.jpg?width=2106&amp;height=1180&amp;name=222.jpg 2106w, https://company.hpc-ai.com/hs-fs/hubfs/222.jpg?width=2633&amp;height=1475&amp;name=222.jpg 2633w, https://company.hpc-ai.com/hs-fs/hubfs/222.jpg?width=3159&amp;height=1770&amp;name=222.jpg 3159w" sizes="(max-width: 1053px) 100vw, 1053px"></div>
+</div>
+<div data-page-id="BiendQnVToQDY0xgDrJcOhbynJY" data-docx-has-block-data="false">
+<h1 style="font-size: 30px;">Open-Sora video at a glance</h1>
+<div><div class="hs-video-widget" data-hsv-embed-id="c03a221a-d852-4777-bf94-de8fd2d73456">
+  <div class="hs-video-container" style="max-width: 1920px; margin: 0 auto;">
+    <div class="hs-video-wrapper" style="position: relative; height: 0; padding-bottom: 56.25%">
+      <iframe data-hsv-src="https://play-eu1.hubspotvideo.com/v/26563514/id/96592587237" referrerpolicy="origin" sandbox="allow-forms allow-scripts allow-same-origin allow-popups" allow="autoplay; fullscreen;" style="position: absolute !important; width: 100% !important; height: 100% !important; left: 0; top: 0; border: 0 none; pointer-events: initial" title="HubSpot Video" loading="lazy" data-hsv-id="96592587237" data-hsv-style="" data-hsv-width="1920" data-hsv-height="1080" data-hsv-autoplay="false" data-hsv-loop="false" data-hsv-muted="false" data-hsv-hidden-controls="false" data-hsv-full-width="false"></iframe>
+    </div>
+  </div>
+</div></div>
+<div>&nbsp;</div>
+<div><strong>Welcome to keep following the Open-Sora </strong><strong>open-source</strong><strong> project: </strong><span style="color: #20499e;"><a href="https://github.com/hpcaitech/Open-Sora" style="font-weight: bold;">https://github.com/hpcaitech/Open-Sora</a></span></div>
+<div><span style="color: #20499e;">&nbsp;</span></div>
+<div>Subsequently, we will continue to maintain and optimize the Open-Sora project by utilizing more video training data to generate higher quality and longer video content and supporting multi-resolution features to effectively promote AI technology in the fields of film, games, advertising and other areas of landing.</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div><span style="color: #999999;"><em><strong>Reference</strong></em></span></div>
+<div><span style="color: #999999;">[1] https://arxiv.org/abs/2212.09748 Scalable Diffusion Models with Transformers</span></div>
+<div><span style="color: #999999;">[2] https://arxiv.org/abs/2310.00426 PixArt-α: Fast Training of Diffusion Transformer for Photorealistic Text-to-Image Synthesis</span></div>
+<div><span style="color: #999999;">[3] https://arxiv.org/abs/2311.15127 Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets</span></div>
+<div><span style="color: #999999;">[4] https://arxiv.org/abs/2401.03048 Latte: Latent Diffusion Transformer for Video Generation</span></div>
+<div><span style="color: #999999;">[5] https://huggingface.co/stabilityai/sd-vae-ft-mse-original</span></div>
+<div><span style="color: #999999;">[6] https://github.com/google-research/text-to-text-transfer-transformer</span></div>
+<div><span style="color: #999999;">[7] https://github.com/haotian-liu/LLaVA</span></div>
+</div>
+<p>&nbsp;</p></span>
+        </div>     
+        
+        <div>
+          <div id="hs_cos_wrapper_social_sharing" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+
+
+
+
+  
+
+
+
+
+
+
+<div class="social-sharing">
+
+  
+    <span class="social-sharing__share-text">Share</span>
+  
+
+  
+
+  
+
+    
+
+    
+    
+      
+    
+
+    
+
+    <a class="social-sharing__link" href="https://twitter.com/intent/tweet?url=https://company.hpc-ai.com/blog/open-sora-v1.0" target="_blank" rel="noopener">
+      <span class=" icon--light ">
+        <span id="hs_cos_wrapper_social_sharing_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-sharing__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" aria-labelledby="twitter7" role="img"><title id="twitter7">twitter icon</title><g id="twitter7_layer"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+    
+
+    
+    
+      
+    
+
+    
+
+    <a class="social-sharing__link" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https://company.hpc-ai.com/blog/open-sora-v1.0" target="_blank" rel="noopener">
+      <span class=" icon--light ">
+        <span id="hs_cos_wrapper_social_sharing_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-sharing__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-labelledby="linkedin-in8" role="img"><title id="linkedin-in8">linkedin-in icon</title><g id="linkedin-in8_layer"><path d="M100.3 480H7.4V180.9h92.9V480zM53.8 140.1C24.1 140.1 0 115.5 0 85.8 0 56.1 24.1 32 53.8 32c29.7 0 53.8 24.1 53.8 53.8 0 29.7-24.1 54.3-53.8 54.3zM448 480h-92.7V334.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V480h-92.8V180.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V480z" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+    
+
+    
+    
+      
+    
+
+    
+
+    <a class="social-sharing__link" href="http://www.facebook.com/share.php?u=https://company.hpc-ai.com/blog/open-sora-v1.0" target="_blank" rel="noopener">
+      <span class=" icon--light ">
+        <span id="hs_cos_wrapper_social_sharing_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-sharing__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 264 512" aria-labelledby="facebook-f9" role="img"><title id="facebook-f9">facebook-f icon</title><g id="facebook-f9_layer"><path d="M76.7 512V283H0v-91h76.7v-71.7C76.7 42.4 124.3 0 193.8 0c33.3 0 61.9 2.5 70.2 3.6V85h-48.2c-37.8 0-45.1 18-45.1 44.3V192H256l-11.7 91h-73.6v229" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+    
+
+    
+    
+      
+    
+
+    
+
+    <a class="social-sharing__link" href="mailto:?body=https://company.hpc-ai.com/blog/open-sora-v1.0" target="_blank" rel="noopener">
+      <span class=" icon--light ">
+        <span id="hs_cos_wrapper_social_sharing_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-sharing__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" aria-labelledby="envelope10" role="img"><title id="envelope10">envelope icon</title><g id="envelope10_layer"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+</div>
+
+
+
+<style>
+  #hs_cos_wrapper_social_sharing .social-sharing {}
+
+#hs_cos_wrapper_social_sharing .social-sharing__share-text { margin-top:10px; }
+
+#hs_cos_wrapper_social_sharing .social-sharing__link { margin-top:10px; }
+
+#hs_cos_wrapper_social_sharing .social-sharing__icon { background-color:rgba(255,255,255,1.0); }
+
+#hs_cos_wrapper_social_sharing .social-sharing__icon svg { fill:#FF0000; }
+
+#hs_cos_wrapper_social_sharing .social-sharing__icon:hover,
+#hs_cos_wrapper_social_sharing .social-sharing__icon:focus { background-color:rgba(175,175,175,1.0); }
+
+#hs_cos_wrapper_social_sharing .social-sharing__icon:active { background-color:rgba(255,255,255,1.0); }
+
+  </style></div>
+        </div>
+        <div class="blog-comments">
+          <h3>Comments</h3>
+          <div id="hs_cos_wrapper_blog_comments" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module widget-type-blog_comments" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><span id="hs_cos_wrapper_blog_comments_blog_comments" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_blog_comments" style="" data-hs-cos-general-type="widget" data-hs-cos-type="blog_comments">
+<div class="section post-footer">
+    <div id="comments-listing" class="new-comments"></div>
+    
+      <div id="hs_form_target_a2916b68-b04c-41dd-8150-08cff4a76e89"></div>
+      
+      
+      
+      
+    
+</div>
+
+</span></div>
+        </div>
+      </article>
+    </div>
+
+  </div>
+
+</div>
+
+      </main>
+
+      
+        <div data-global-resource-path="Colossal AI/templates/partials/website-footer.html"><footer class="footer">
+  <div class="container-fluid">
+<div class="row-fluid-wrapper">
+<div class="row-fluid">
+<div class="span12 widget-span widget-type-cell " style="" data-widget-type="cell" data-x="0" data-w="12">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-1 dnd-section footer-row-0-padding footer-row-0-margin footer-row-0-force-full-width-section">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-cell cell_16735110941502-margin dnd-column" style="" data-widget-type="cell" data-x="0" data-w="12">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-2 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget widget_1673511094064-flexbox-positioning dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_widget_1673511094064" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module widget-type-linked_image" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+    
+
+
+
+
+
+
+  
+
+
+
+<span id="hs_cos_wrapper_widget_1673511094064_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_linked_image" style="" data-hs-cos-general-type="widget" data-hs-cos-type="linked_image"><img src="https://company.hpc-ai.com/hubfs/Elements/speed-line_blue-red-black.png" class="hs-image-widget " style="max-width: 100%; height: auto;" alt="speed-line_blue-red-black" title="speed-line_blue-red-black" loading="lazy"></span></div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+<div class="row-fluid-wrapper row-depth-1 row-number-3 dnd-section footer-row-1-padding">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-cell dnd-column" style="" data-widget-type="cell" data-x="0" data-w="12">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-4 dnd-row">
+<div class="row-fluid ">
+<div class="span6 widget-span widget-type-cell dnd-column footer-column-2-margin" style="" data-widget-type="cell" data-x="0" data-w="6">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-5 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_footer-module-4" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module widget-type-rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><span id="hs_cos_wrapper_footer-module-4_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text"><p style="font-size: 18px; line-height: 1.75;">HPC-AI Tech offers vendor-supported, enterprise-grade solutions , both on-premises and in the cloud. Our industry-leading technology accelerates and expands deep learning capabilities through parallel and distributed training, inference, and fine-tuning of large neural networks using high-performance computing to reduce your costs. We operate globally and serve clients in various industries.</p></span></div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+<div class="row-fluid-wrapper row-depth-1 row-number-6 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_footer-module-5" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+
+<style>
+#hs_cos_wrapper_footer-module-5 .social-follow {}
+
+#hs_cos_wrapper_footer-module-5 .social-follow__link {}
+
+#hs_cos_wrapper_footer-module-5 .social-follow__icon { background-color:rgba(255,255,255,1.0); }
+
+#hs_cos_wrapper_footer-module-5 .social-follow__icon svg { fill:#DD2D26; }
+
+#hs_cos_wrapper_footer-module-5 .social-follow__icon:hover,
+#hs_cos_wrapper_footer-module-5 .social-follow__icon:focus { background-color:rgba(175,175,175,1.0); }
+
+#hs_cos_wrapper_footer-module-5 .social-follow__icon:active { background-color:rgba(255,255,255,1.0); }
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<div class="social-follow">
+
+  
+
+  
+
+    
+
+    
+      
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+
+    <a href="https://github.com/hpcaitech" class="social-follow__link">
+      <span class="  ">
+        <span id="hs_cos_wrapper_footer-module-5_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-follow__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 496 512" aria-labelledby="github11" role="img"><title id="github11">Follow us on GitHub</title><g id="github11_layer"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+    
+
+    
+      
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+
+    <a href="https://twitter.com/HPCAITech" class="social-follow__link">
+      <span class="  ">
+        <span id="hs_cos_wrapper_footer-module-5_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-follow__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" aria-labelledby="twitter12" role="img"><title id="twitter12">Follow us on Twitter</title><g id="twitter12_layer"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+    
+
+    
+      
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+
+    <a href="https://www.facebook.com/profile.php?id=100075828609866" class="social-follow__link">
+      <span class="  ">
+        <span id="hs_cos_wrapper_footer-module-5_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-follow__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 264 512" aria-labelledby="facebook-f13" role="img"><title id="facebook-f13">facebook-f icon</title><g id="facebook-f13_layer"><path d="M76.7 512V283H0v-91h76.7v-71.7C76.7 42.4 124.3 0 193.8 0c33.3 0 61.9 2.5 70.2 3.6V85h-48.2c-37.8 0-45.1 18-45.1 44.3V192H256l-11.7 91h-73.6v229" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+    
+
+    
+      
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+
+    <a href="https://www.linkedin.com/company/hpc-ai-technology/" class="social-follow__link">
+      <span class="  ">
+        <span id="hs_cos_wrapper_footer-module-5_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-follow__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-labelledby="linkedin-in14" role="img"><title id="linkedin-in14">Follow us on LinkedIn</title><g id="linkedin-in14_layer"><path d="M100.3 480H7.4V180.9h92.9V480zM53.8 140.1C24.1 140.1 0 115.5 0 85.8 0 56.1 24.1 32 53.8 32c29.7 0 53.8 24.1 53.8 53.8 0 29.7-24.1 54.3-53.8 54.3zM448 480h-92.7V334.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V480h-92.8V180.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V480z" /></g></svg></span>
+      </span>
+    </a>
+
+  
+
+    
+
+    
+      
+    
+
+    
+
+    
+    
+      
+    
+    
+    
+    
+
+    
+
+    <a href="mailto:service@hpc-ai.com" class="social-follow__link">
+      <span class="  ">
+        <span id="hs_cos_wrapper_footer-module-5_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon social-follow__icon icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" aria-labelledby="envelope15" role="img"><title id="envelope15">Contact us via email</title><g id="envelope15_layer"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z" /></g></svg></span>
+      </span>
+    </a>
+
+  
+</div></div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+<div class="span3 widget-span widget-type-cell footer-column-6-margin dnd-column" style="" data-widget-type="cell" data-x="6" data-w="3">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-7 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_footer-module-9" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module widget-type-rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><span id="hs_cos_wrapper_footer-module-9_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text"><div style="text-align: left;">
+<div>
+<div><strong>Newsletter</strong></div>
+<br>
+<div style="line-height: 2;">Sign up to get updates.</div>
+</div>
+</div></span></div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+<div class="row-fluid-wrapper row-depth-1 row-number-8 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_widget_1670881275304" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module widget-type-form" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+
+
+	
+
+
+
+	<span id="hs_cos_wrapper_widget_1670881275304_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_form" style="" data-hs-cos-general-type="widget" data-hs-cos-type="form">
+<div id="hs_form_target_widget_1670881275304"></div>
+
+
+
+
+
+
+
+
+</span>
+</div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+<div class="span3 widget-span widget-type-cell cell_1670881298716-margin dnd-column" style="" data-widget-type="cell" data-x="9" data-w="3">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-9 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_module_16708812987163" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module widget-type-rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><span id="hs_cos_wrapper_module_16708812987163_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text"><div style="text-align: left;">
+<div>
+<div><strong>Resources</strong></div>
+<br>
+<div style="line-height: 2;"><a href="https://www.hpc-ai.tech/blog" rel="noopener">Blog</a></div>
+<div style="line-height: 2;">&nbsp;</div>
+<div style="line-height: 2;"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-640d1679-9ad2-48a3-8e3b-4694445bc159"><span class="hs-cta-node hs-cta-640d1679-9ad2-48a3-8e3b-4694445bc159" id="hs-cta-640d1679-9ad2-48a3-8e3b-4694445bc159"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://hubspot-cta-redirect-eu1-prod.s3.amazonaws.com/cta/redirect/26563514/640d1679-9ad2-48a3-8e3b-4694445bc159"><img class="hs-cta-img" id="hs-cta-img-640d1679-9ad2-48a3-8e3b-4694445bc159" style="border-width:0px;" src="https://hubspot-no-cache-eu1-prod.s3.amazonaws.com/cta/default/26563514/640d1679-9ad2-48a3-8e3b-4694445bc159.png" alt="GitHub"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(26563514, '640d1679-9ad2-48a3-8e3b-4694445bc159', {"useNewLoader":"true","region":"eu1"}); </script></span><!-- end HubSpot Call-to-Action Code --></div>
+<div style="line-height: 2;">&nbsp;</div>
+<div style="line-height: 2;">&nbsp;</div>
+<div style="line-height: 2;"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-92321cd6-761b-44f6-b5c9-82769914f4bf"><span class="hs-cta-node hs-cta-92321cd6-761b-44f6-b5c9-82769914f4bf" id="hs-cta-92321cd6-761b-44f6-b5c9-82769914f4bf"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://hubspot-cta-redirect-eu1-prod.s3.amazonaws.com/cta/redirect/26563514/92321cd6-761b-44f6-b5c9-82769914f4bf"><img class="hs-cta-img" id="hs-cta-img-92321cd6-761b-44f6-b5c9-82769914f4bf" style="border-width:0px;" src="https://hubspot-no-cache-eu1-prod.s3.amazonaws.com/cta/default/26563514/92321cd6-761b-44f6-b5c9-82769914f4bf.png" alt="WeChat"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(26563514, '92321cd6-761b-44f6-b5c9-82769914f4bf', {"useNewLoader":"true","region":"eu1"}); </script></span><!-- end HubSpot Call-to-Action Code --></div>
+</div>
+</div></span></div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+<div class="row-fluid-wrapper row-depth-1 row-number-10 dnd-section footer-row-2-padding">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-cell dnd-column" style="" data-widget-type="cell" data-x="0" data-w="12">
+
+<div class="row-fluid-wrapper row-depth-1 row-number-11 dnd-row">
+<div class="row-fluid ">
+<div class="span12 widget-span widget-type-custom_widget dnd-module" style="" data-widget-type="custom_widget" data-x="0" data-w="12">
+<div id="hs_cos_wrapper_footer-module-11" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module widget-type-rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><span id="hs_cos_wrapper_footer-module-11_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text"><div style="text-align: right;">
+<p style="font-size: 14px; text-align: left;"><span style="color: #ffffff;">Copyright © 2026, HPC AI TECHNOLOGY PTE. LTD.</span></p>
+<p style="font-size: 10px; text-align: left;"><span style="color: #ffffff;">All product and company names, as well as logos and trademarks or registered trademarks, are the property of their respective holders. Use of them does not imply any affiliation with or endorsement by them.</span></p>
+</div></span></div>
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+</div><!--end row-->
+</div><!--end row-wrapper -->
+
+</div><!--end widget-span -->
+</div>
+</div>
+</div>
+</footer></div>
+      
+    </div>
+    
+    
+    
+    
+    
+    
+<!-- HubSpot performance collection script -->
+<script defer src="/hs/hsstatic/content-cwv-embed/static-1.1293/embed.js"></script>
+<script src="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/57939649237/1771924132669/template_child.min.js"></script>
+<script src="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/55737161448/1771924132016/template_main.min.js"></script>
+<script>
+var hsVars = hsVars || {}; hsVars['language'] = 'en';
+</script>
+
+<script src="/hs/hsstatic/cos-i18n/static-1.53/bundles/project.js"></script>
+<script src="https://company.hpc-ai.com/hubfs/hub_generated/module_assets/1/55737541577/1744351672140/module_website-header.min.js"></script>
+<!-- HubSpot Video embed loader -->
+<script async data-hs-portal-id="26563514" data-hs-ignore="true" data-cookieconsent="ignore" data-hs-region="eu1" data-hs-page-id="96584401885" src="https://static.hsappstatic.net/video-embed/ex/loader.js"></script>
+<script src="/hs/hsstatic/AsyncSupport/static-1.501/js/comment_listing_asset.js"></script>
+<script>
+  function hsOnReadyPopulateCommentsFeed() {
+    var options = {
+      commentsUrl: "https://api-eu1.hubapi.com/comments/v3/comments/thread/public?portalId=26563514&offset=0&limit=10000&contentId=96584401885&collectionId=57938768373",
+      maxThreadDepth: 2,
+      showForm: true,
+      
+      target: "hs_form_target_a2916b68-b04c-41dd-8150-08cff4a76e89",
+      replyTo: "Reply to <em>{{user}}</em>",
+      replyingTo: "Replying to {{user}}"
+    };
+    window.hsPopulateCommentsFeed(options);
+  }
+
+  if (document.readyState === "complete" ||
+      (document.readyState !== "loading" && !document.documentElement.doScroll)
+  ) {
+    hsOnReadyPopulateCommentsFeed();
+  } else {
+    document.addEventListener("DOMContentLoaded", hsOnReadyPopulateCommentsFeed);
+  }
+
+</script>
+
+
+          <!--[if lte IE 8]>
+          <script charset="utf-8" src="https://js-eu1.hsforms.net/forms/v2-legacy.js"></script>
+          <![endif]-->
+      
+<script data-hs-allowed="true" src="/_hcms/forms/v2.js"></script>
+
+        <script data-hs-allowed="true">
+            hbspt.forms.create({
+                portalId: '26563514',
+                formId: 'a2916b68-b04c-41dd-8150-08cff4a76e89',
+                pageId: '96584401885',
+                region: 'eu1',
+                pageName: "Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models",
+                contentType: 'blog-post',
+                
+                formsBaseUrl: '/_hcms/forms/',
+                
+                
+                
+                css: '',
+                target: "#hs_form_target_a2916b68-b04c-41dd-8150-08cff4a76e89",
+                type: 'BLOG_COMMENT',
+                
+                submitButtonClass: 'hs-button primary',
+                formInstanceId: '2387',
+                getExtraMetaDataBeforeSubmit: window.hsPopulateCommentFormGetExtraMetaDataBeforeSubmit
+            });
+
+            window.addEventListener('message', function(event) {
+              var origin = event.origin; var data = event.data;
+              if ((origin != null && (origin === 'null' || document.location.href.toLowerCase().indexOf(origin.toLowerCase()) === 0)) && data !== null && data.type === 'hsFormCallback' && data.id == 'a2916b68-b04c-41dd-8150-08cff4a76e89') {
+                if (data.eventName === 'onFormReady') {
+                  window.hsPopulateCommentFormOnFormReady({
+                    successMessage: "Your comment has been received.",
+                    target: "#hs_form_target_a2916b68-b04c-41dd-8150-08cff4a76e89"
+                  });
+                } else if (data.eventName === 'onFormSubmitted') {
+                  window.hsPopulateCommentFormOnFormSubmitted();
+                }
+              }
+            });
+        </script>
+      
+
+    <!--[if lte IE 8]>
+    <script charset="utf-8" src="https://js-eu1.hsforms.net/forms/v2-legacy.js"></script>
+    <![endif]-->
+
+
+    <script data-hs-allowed="true">
+        var options = {
+            portalId: '26563514',
+            formId: '9057852b-6fb5-4bc2-9e65-2f8c21c74c97',
+            formInstanceId: '5180',
+            
+            pageId: '96584401885',
+            
+            region: 'eu1',
+            
+            
+            
+            
+            pageName: "Open-Sora: Revealing Complete Model Parameters, Training Details, and Everything for Sora-like Video Generation Models",
+            
+            
+            
+            inlineMessage: "Thanks for submitting the form.",
+            
+            
+            rawInlineMessage: "Thanks for submitting the form.",
+            
+            
+            hsFormKey: "6f3d28a075e465af17e5a504d32c8697",
+            
+            
+            css: '',
+            target: '#hs_form_target_widget_1670881275304',
+            
+            
+            
+            
+            
+            
+            
+            contentType: "blog-post",
+            
+            
+            
+            formsBaseUrl: '/_hcms/forms/',
+            
+            
+            
+            formData: {
+                cssClass: 'hs-form stacked hs-custom-form'
+            }
+        };
+
+        options.getExtraMetaDataBeforeSubmit = function() {
+            var metadata = {};
+            
+
+            if (hbspt.targetedContentMetadata) {
+                var count = hbspt.targetedContentMetadata.length;
+                var targetedContentData = [];
+                for (var i = 0; i < count; i++) {
+                    var tc = hbspt.targetedContentMetadata[i];
+                     if ( tc.length !== 3) {
+                        continue;
+                     }
+                     targetedContentData.push({
+                        definitionId: tc[0],
+                        criterionId: tc[1],
+                        smartTypeId: tc[2]
+                     });
+                }
+                metadata["targetedContentMetadata"] = JSON.stringify(targetedContentData);
+            }
+
+            return metadata;
+        };
+
+        hbspt.forms.create(options);
+    </script>
+
+
+<!-- Start of HubSpot Analytics Code -->
+<script type="text/javascript">
+var _hsq = _hsq || [];
+_hsq.push(["setContentType", "blog-post"]);
+_hsq.push(["setCanonicalUrl", "https:\/\/company.hpc-ai.com\/blog\/open-sora-v1.0"]);
+_hsq.push(["setPageId", "96584401885"]);
+_hsq.push(["setContentMetadata", {
+    "contentPageId": 96584401885,
+    "legacyPageId": "96584401885",
+    "contentFolderId": null,
+    "contentGroupId": 57938768373,
+    "abTestId": null,
+    "languageVariantId": 96584401885,
+    "languageCode": "en",
+    
+    
+}]);
+</script>
+
+<script type="text/javascript" id="hs-script-loader" async defer src="/hs/scriptloader/26563514.js"></script>
+<!-- End of HubSpot Analytics Code -->
+
+
+<script type="text/javascript">
+var hsVars = {
+    render_id: "dd5ca06b-7501-4422-8806-85475866b4b1",
+    ticks: 1778128122217,
+    page_id: 96584401885,
+    
+    content_group_id: 57938768373,
+    portal_id: 26563514,
+    app_hs_base_url: "https://app-eu1.hubspot.com",
+    cp_hs_base_url: "https://cp-eu1.hubspot.com",
+    language: "en",
+    analytics_page_type: "blog-post",
+    scp_content_type: "",
+    
+    analytics_page_id: "96584401885",
+    category_id: 3,
+    folder_id: 0,
+    is_hubspot_user: false
+}
+</script>
+
+
+<script defer src="/hs/hsstatic/HubspotToolsMenu/static-1.640/js/index.js"></script>
+
+
+<script src="https://company.hpc-ai.com/hubfs/hub_generated/template_assets/1/58793561038/1771924124443/template_prism.min.js"></script>
+<div id="fb-root"></div>
+  <script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.0";
+  fjs.parentNode.insertBefore(js, fjs);
+ }(document, 'script', 'facebook-jssdk'));</script> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+ 
+
+
+  
+</body></html>

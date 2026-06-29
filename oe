@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Open Edit 本地 CLI 包装器（用 venv python，自带 httpx/faster-whisper 等依赖）。
+# 用法: ./oe make --prompt "..." --uploads a.mp4 --subtitles --music
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PY="$DIR/backend/.venv/bin/python"
+[ -x "$PY" ] || PY="python3"   # 没 venv 时降级（字幕/LLM 可能缺依赖）
+exec env PYTHONPATH="$DIR" "$PY" "$DIR/oe.py" "$@"

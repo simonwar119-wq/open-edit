@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Edit — Video Style Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">◈</span>
+                <span class="logo-text">Open Edit</span>
+            </div>
+            <p class="tagline">Analyze any video. Discover its visual DNA.</p>
+        </header>
+
+        <!-- Main Upload Area -->
+        <main>
+            <div class="upload-section">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <p class="upload-text">Drop a video here, or <span class="browse-link">browse</span></p>
+                    <p class="upload-hint">MP4, MOV, WebM — max 30MB, 60 seconds</p>
+                    <input type="file" id="videoInput" accept=".mp4,.mov,.avi,.webm,.mkv" hidden>
+                </div>
+
+                <!-- Preset Examples -->
+                <div class="presets">
+                    <p class="presets-label">Or try a preset example:</p>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-video="preset_steak">
+                            <span class="preset-icon">🥩</span>
+                            <span>Steak Sizzle</span>
+                        </button>
+                        <button class="preset-btn" data-video="preset_travel">
+                            <span class="preset-icon">🌍</span>
+                            <span>Travel Vlog</span>
+                        </button>
+                        <button class="preset-btn" data-video="preset_portrait">
+                            <span class="preset-icon">📸</span>
+                            <span>Portrait</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-section" id="loadingSection" hidden>
+                <div class="spinner"></div>
+                <h3 class="loading-title">Analyzing your video...</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="loading-steps">
+                    <div class="step" id="step1"><span class="step-dot">●</span> Extracting frames</div>
+                    <div class="step" id="step2"><span class="step-dot">●</span> Analyzing composition & color</div>
+                    <div class="step" id="step3"><span class="step-dot">●</span> Detecting rhythm & pace</div>
+                    <div class="step" id="step4"><span class="step-dot">●</span> Matching against style library</div>
+                    <div class="step" id="step5"><span class="step-dot">●</span> Generating report</div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="results-section" id="resultsSection" hidden>
+                <div class="results-header">
+                    <h2 class="results-title">Style Analysis Report</h2>
+                    <div class="results-meta" id="resultsMeta"></div>
+                    <button class="btn-secondary" onclick="resetPage()">← Analyze another video</button>
+                </div>
+
+                <!-- Summary -->
+                <div class="card summary-card" id="summaryCard">
+                    <div class="card-title">Summary</div>
+                    <p class="summary-text" id="summaryText"></p>
+                </div>
+
+                <!-- Color & Visual -->
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">Color Tone</div>
+                        <div class="metric-value" id="colorBias"></div>
+                        <div class="palette" id="palette"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Lighting</div>
+                        <div class="metric-value" id="lightingValue"></div>
+                        <div class="metric-bar" id="lightingBar"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Shot Type</div>
+                        <div class="metric-value" id="shotTypeValue"></div>
+                        <div class="metric-label" id="shotTypeLabel"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Mood</div>
+                        <div class="metric-value" id="moodValue"></div>
+                        <div class="metric-label" id="moodLabel"></div>
+                    </div>
+                </div>
+
+                <!-- Rhythm -->
+                <div class="card">
+                    <div class="card-title">Rhythm & Pace</div>
+                    <div class="rhythm-grid">
+                        <div class="rhythm-item">
+                            <span class="rhythm-label">Duration</span>
+                            <span class="rhythm-value" id="rhythmDuration"></span>
+                        </div>
+                        <div class="rhythm-item">
+                            <span class="rhythm-label">Avg Shot</span>
+                            <span class="rhythm-value" id="rhythmAvgShot"></span>
+                        </div>
+                        <div class="rhythm-item">
+                            <span class="rhythm-label">Scene Changes</span>
+                            <span class="rhythm-value" id="rhythmScenes"></span>
+                        </div>
+                        <div class="rhythm-item">
+                            <span class="rhythm-label">FPS</span>
+                            <span class="rhythm-value" id="rhythmFps"></span>
+                        </div>
+                        <div class="rhythm-item">
+                            <span class="rhythm-label">Resolution</span>
+                            <span class="rhythm-value" id="rhythmResolution"></span>
+                        </div>
+                        <div class="rhythm-item">
+                            <span class="rhythm-label">Motion</span>
+                            <span class="rhythm-value" id="rhythmMotion"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Style Matches -->
+                <div class="card" id="styleMatchesCard" hidden>
+                    <div class="card-title">Style Matches</div>
+                    <div class="matches-list" id="matchesList"></div>
+                </div>
+
+                <!-- Frame Descriptions -->
+                <div class="card" id="frameCard" hidden>
+                    <div class="card-title">Frame Snapshots</div>
+                    <div class="frame-descriptions" id="frameDescriptions"></div>
+                </div>
+
+                <!-- Processing time -->
+                <div class="processing-time" id="processingTime"></div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Open Edit — From cinematic analysis to production-ready insight.</p>
+        </footer>
+    </div>
+
+    <script>
+        const uploadZone = document.getElementById('uploadZone');
+        const videoInput = document.getElementById('videoInput');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('resultsSection');
+
+        // Drag & drop
+        uploadZone.addEventListener('click', () => videoInput.click());
+        uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+        uploadZone.addEventListener('drop', (e) => { e.preventDefault(); uploadZone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+        videoInput.addEventListener('change', () => { if (videoInput.files[0]) handleFile(videoInput.files[0]); });
+
+        // Preset buttons
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // For presets: show a message that presets are coming
+                // Or: load a pre-analyzed result
+                alert('Preset examples coming soon! Upload your own video for now.');
+            });
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+            if (!file.type.startsWith('video/')) {
+                alert('Please upload a video file.');
+                return;
+            }
+            if (file.size > 30 * 1024 * 1024) {
+                alert('File too large. Maximum is 30MB.');
+                return;
+            }
+
+            // Show loading
+            uploadZone.parentElement.hidden = true;
+            loadingSection.hidden = false;
+            resultsSection.hidden = true;
+            animateProgress();
+
+            const formData = new FormData();
+            formData.append('video', file);
+
+            fetch('/analyze', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .then(data => {
+                    loadingSection.hidden = true;
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                        resetPage();
+                        return;
+                    }
+                    renderReport(data);
+                })
+                .catch(err => {
+                    loadingSection.hidden = true;
+                    alert('Network error: ' + err.message);
+                    resetPage();
+                });
+        }
+
+        function animateProgress() {
+            const fill = document.getElementById('progressFill');
+            const steps = ['step1','step2','step3','step4','step5'];
+            let i = 0;
+            steps.forEach(id => document.getElementById(id).classList.remove('active'));
+
+            const interval = setInterval(() => {
+                if (i >= steps.length) { clearInterval(interval); return; }
+                document.getElementById(steps[i]).classList.add('active');
+                fill.style.width = ((i + 1) / steps.length * 100) + '%';
+                i++;
+            }, 3000);
+        }
+
+        function renderReport(data) {
+            const va = data.visual_analysis || {};
+            const rhythm = data.rhythm || {};
+
+            // Meta
+            document.getElementById('resultsMeta').innerHTML =
+                `<span>${data.video?.duration_s || '?'}s</span> &middot;
+                 <span>${rhythm.resolution || '?'}</span> &middot;
+                 <span>${rhythm.codec || '?'}</span>`;
+
+            // Summary
+            document.getElementById('summaryText').textContent = data.summary || 'Analysis complete.';
+            document.getElementById('summaryCard').hidden = false;
+
+            // Color
+            const colorBias = va.overall_color_bias || 'neutral';
+            const biasLabels = {warm:'Warm',cool:'Cool',neutral:'Neutral',mixed:'Mixed'};
+            document.getElementById('colorBias').textContent = biasLabels[colorBias] || colorBias;
+
+            const palette = va.palette || [];
+            const paletteEl = document.getElementById('palette');
+            paletteEl.innerHTML = palette.map(c =>
+                `<span class="color-swatch" style="background:${c}" title="${c}"></span>`
+            ).join('');
+
+            // Lighting
+            const lighting = va.lighting?.dominant || 'unknown';
+            const lightingConf = va.lighting?.confidence || 0;
+            document.getElementById('lightingValue').textContent = lighting.charAt(0).toUpperCase() + lighting.slice(1);
+            document.getElementById('lightingBar').innerHTML =
+                `<div class="bar-fill" style="width:${lightingConf}%"></div>`;
+
+            // Shot type
+            const shotType = va.shot_type?.dominant || 'unknown';
+            document.getElementById('shotTypeValue').textContent = shotType.charAt(0).toUpperCase() + shotType.slice(1);
+            const shotDist = va.shot_type?.distribution || {};
+            const shotLabels = Object.entries(shotDist)
+                .sort((a,b) => b[1]-a[1])
+                .slice(0,3)
+                .map(([k,v]) => `${k}: ${v}`)
+                .join(' | ');
+            document.getElementById('shotTypeLabel').textContent = shotLabels;
+
+            // Mood
+            const mood = va.mood?.dominant || 'unknown';
+            const moodEmojis = {cozy:'🛋️', dramatic:'🎭', mysterious:'🔮', energetic:'⚡',
+                                peaceful:'🌿', nostalgic:'📻', intimate:'💫', epic:'🏔️'};
+            document.getElementById('moodValue').textContent =
+                (moodEmojis[mood] || '') + ' ' + mood.charAt(0).toUpperCase() + mood.slice(1);
+            document.getElementById('moodLabel').textContent =
+                `Confidence: ${va.mood?.confidence || 0}%`;
+
+            // Rhythm
+            document.getElementById('rhythmDuration').textContent = rhythm.duration_s + 's';
+            document.getElementById('rhythmAvgShot').textContent = rhythm.avg_shot_duration_s + 's';
+            document.getElementById('rhythmScenes').textContent = rhythm.scene_changes || '—';
+            document.getElementById('rhythmFps').textContent = rhythm.fps || '—';
+            document.getElementById('rhythmResolution').textContent = rhythm.resolution || '—';
+            document.getElementById('rhythmMotion').textContent =
+                (rhythm.motion_level || '?').charAt(0).toUpperCase() + (rhythm.motion_level || '?').slice(1);
+
+            // Style matches
+            const matches = data.style_matches || [];
+            if (matches.length > 0) {
+                const listEl = document.getElementById('matchesList');
+                listEl.innerHTML = matches.map(m => `
+                    <div class="match-item">
+                        <div class="match-header">
+                            <span class="match-name">${m.style_name}</span>
+                            <span class="match-score">${m.score}% match</span>
+                        </div>
+                        <div class="match-bar"><div class="match-fill" style="width:${Math.min(m.score,100)}%"></div></div>
+                        <p class="match-desc">${m.description || ''}</p>
+                        ${m.source_creator ? `<p class="match-creator">Creator: ${m.source_creator}</p>` : ''}
+                        ${m.matches.length > 0 ? `<p class="match-tags">${m.matches.map(t => `<span class="tag">${t}</span>`).join('')}</p>` : ''}
+                    </div>
+                `).join('');
+                document.getElementById('styleMatchesCard').hidden = false;
+            }
+
+            // Frame descriptions
+            const descs = va.frame_descriptions || [];
+            if (descs.length > 0) {
+                document.getElementById('frameDescriptions').innerHTML =
+                    descs.map(d => `<div class="frame-desc">🎞️ ${d}</div>`).join('');
+                document.getElementById('frameCard').hidden = false;
+            }
+
+            // Processing time
+            document.getElementById('processingTime').textContent =
+                `Processed in ${data.processing_time_s || 0}s`;
+
+            // Show results
+            resultsSection.hidden = false;
+            window.scrollTo({ top: resultsSection.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function resetPage() {
+            uploadZone.parentElement.hidden = false;
+            loadingSection.hidden = true;
+            resultsSection.hidden = true;
+            document.getElementById('videoInput').value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Init: hide preset video placeholder
+        // (Presets are static previews, not real uploads in v1)
+    </script>
+</body>
+</html>

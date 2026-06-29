@@ -1,0 +1,84 @@
+{
+  "$schema": "https://open-edit.dev/schemas/style-profile/v2.json",
+  "id": "fincher-inspired-v1",
+  "display_name": "冷峻控制流（芬奇风格启发）",
+  "inspiration": "受冷峻、高对比、漂白(bleach-bypass)去饱和的精确控制型导演风格启发，非复制具名导演",
+  "pacing": {
+    "asl_seconds": 4.0,
+    "asl_distribution": "lognormal",
+    "shot_len_p10_p90_s": [1.5, 9.0],
+    "rhythm": "controlled",
+    "music_sync": {
+      "enabled": true,
+      "snap_to": "downbeat",
+      "every_n_beats": 2,
+      "beat_tolerance_ms": 60
+    }
+  },
+  "transitions": {
+    "default": "cut",
+    "allowed": ["cut", "dissolve", "match_cut"],
+    "rules": [
+      {
+        "when": "scene_change",
+        "use": "dissolve",
+        "duration_ms": 500,
+        "max_per_minute": 2
+      }
+    ],
+    "ffmpeg_xfade_map": {
+      "dissolve": "fade"
+    }
+  },
+  "framing": {
+    "preferred_shot_scales": ["MS", "CU"],
+    "composition": "locked_symmetry",
+    "insert_cutaways": true
+  },
+  "coverage": {
+    "min_shots_per_scene": 3,
+    "remove_silence": true,
+    "match_cut_seeking": true
+  },
+  "color": {
+    "input_normalization": {
+      "auto_detect_log": true,
+      "target_space": "rec709"
+    },
+    "asc_cdl": {
+      "slope": [0.95, 1.0, 1.02],
+      "offset": [-0.02, 0.0, 0.01],
+      "power": [1.05, 1.0, 0.98],
+      "saturation": 0.55
+    },
+    "creative_lut": {
+      "ref": "luts/bleach-bypass.cube",
+      "intensity": 0.7,
+      "license": "cc-by"
+    },
+    "palette_descriptor": {
+      "named_look": "bleach_bypass_teal",
+      "contrast": "high",
+      "target_skin_protect": true
+    }
+  },
+  "audio_music": {
+    "music_role": "lead",
+    "auto_duck_db": -12,
+    "normalize_lufs": -14
+  },
+  "generation_hints": {
+    "preferred_video_model": "seedance-2.0-fast",
+    "talkinghead_model": "heygen-avatar-iv",
+    "shot_prompts_style": "locked controlled camera, precise centered composition, cinematic lighting, shallow depth of field"
+  },
+  "render": {
+    "aspect_ratio": "9:16",
+    "fps": 24,
+    "codec": "h264"
+  },
+  "export": {
+    "internal_format": "otio",
+    "handoff_formats": ["fcpxml", "edl"]
+  }
+}

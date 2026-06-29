@@ -1,0 +1,8 @@
+{
+  "name": "yuer",
+  "slug": "yuer",
+  "trigger_word": "yuer_boy",
+  "lora_url": "https://v3b.fal.media/files/b/0a9ff68e/h08JBlaNWiUfaXNKTvhjr_pytorch_lora_weights.safetensors",
+  "steps": 1000,
+  "n_photos": 12
+}
