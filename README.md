@@ -118,7 +118,7 @@ Open Edit 把 53 个电影手法 / 风格模板翻译成四层可执行数据：
 | 🟢 P2 | 更多 AI 生成 provider（Kling O1 Edit / HeyGen / ElevenLabs） |
 | 🟢 P3 | DaVinci Resolve MCP — 导出到专业调色/剪辑 |
 
-想参与？见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+想参与？见 [CONTRIBUTING.md](./CONTRIBUTING.md)。新手可以从 [good first issue](https://github.com/simonwar119-wq/open-edit/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) 标签入手。
 
 ---
 
