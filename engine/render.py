@@ -88,15 +88,17 @@ def color_chain(color: dict, fps: int, W: int, H: int, mode: str = "style") -> t
     lut_path = (ENGINE_DIR / lut_ref).resolve() if lut_ref else None
 
     if lut_path and lut_path.exists():
-        cube = str(lut_path).replace("\\", "/")
+        # Escape the option value first, then quote it for the filtergraph.
+        value = lut_path.as_posix().replace("\\", "\\\\").replace(":", r"\:").replace("'", r"\'")
+        cube = "'" + value.replace("'", r"'\''") + "'"
         if intensity < 0.999:
             k = round(intensity, 4)
             fc = (f"[0:v]{prechain}[g];[g]split=2[b][l];"
-                  f"[l]lut3d=file='{cube}':interp=tetrahedral[ld];"
+                  f"[l]lut3d=file={cube}:interp=tetrahedral[ld];"
                   f"[b][ld]blend=all_expr='A*(1-{k})+B*{k}'[outv]")
             note = f"CDL+LUT({lut_path.name}@{int(intensity*100)}%)"
         else:
-            fc = f"[0:v]{prechain},lut3d=file='{cube}':interp=tetrahedral[outv]"
+            fc = f"[0:v]{prechain},lut3d=file={cube}:interp=tetrahedral[outv]"
             note = f"CDL+LUT({lut_path.name})"
     else:
         if lut_ref:
