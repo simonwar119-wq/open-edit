@@ -104,6 +104,7 @@ Open Edit 把 53 个电影手法 / 风格模板翻译成四层可执行数据：
 - ✅ **字幕 + 配乐** — Whisper 逐字 + Pixabay 策展曲库混音
 - ✅ **MCP Server** — 10 个工具，Claude Code 直接调
 - ✅ **WebUI** — `http://127.0.0.1:5050`
+- ✅ **J-cut 导出** — EDL + `oe render --j-cut c2:0.5`，保留切点后的音画同步；[用法与素材余量要求](engine/README.md#j-cut声音提前画面硬切)
 
 ---
 

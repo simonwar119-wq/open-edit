@@ -32,7 +32,7 @@ def run(cmd: list[str]) -> None:
 def has_audio(path: str) -> bool:
     p = subprocess.run(
         ["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries",
-         "stream=index", "-of", "csv=p=0", path], capture_output=True, text=True)
+         "stream=index", "-of", "csv=p=0", path], capture_output=True, text=True, timeout=30)
     return bool(p.stdout.strip())
 
 
@@ -40,11 +40,22 @@ def probe_dur(path: str) -> float:
     p = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration",
          "-of", "default=noprint_wrappers=1:nokey=1", path],
-        capture_output=True, text=True)
+        capture_output=True, text=True, timeout=30)
     try:
         return float(p.stdout.strip())
     except ValueError:
         return 0.0
+
+
+def filter_value(value: str) -> str:
+    """Escape a value through FFmpeg's option parser, then filtergraph parser.
+
+    This is not shell quoting: subprocess receives the graph as one argument.
+    Keep POSIX filename backslashes; Path.as_posix() handles Windows separators.
+    """
+    def escape(text: str, special: str) -> str:
+        return "".join("\\" + c if c in special else c for c in text)
+    return escape(escape(value, "\\': \t\n"), "\\'[],; \t\n")
 
 
 def color_chain(color: dict, fps: int, W: int, H: int, mode: str = "style") -> tuple[str, str]:
@@ -88,15 +99,15 @@ def color_chain(color: dict, fps: int, W: int, H: int, mode: str = "style") -> t
     lut_path = (ENGINE_DIR / lut_ref).resolve() if lut_ref else None
 
     if lut_path and lut_path.exists():
-        cube = str(lut_path).replace("\\", "/")
+        cube = filter_value(lut_path.as_posix())
         if intensity < 0.999:
             k = round(intensity, 4)
             fc = (f"[0:v]{prechain}[g];[g]split=2[b][l];"
-                  f"[l]lut3d=file='{cube}':interp=tetrahedral[ld];"
+                  f"[l]lut3d=file={cube}:interp=tetrahedral[ld];"
                   f"[b][ld]blend=all_expr='A*(1-{k})+B*{k}'[outv]")
             note = f"CDL+LUT({lut_path.name}@{int(intensity*100)}%)"
         else:
-            fc = f"[0:v]{prechain},lut3d=file='{cube}':interp=tetrahedral[outv]"
+            fc = f"[0:v]{prechain},lut3d=file={cube}:interp=tetrahedral[outv]"
             note = f"CDL+LUT({lut_path.name})"
     else:
         if lut_ref:
@@ -106,9 +117,15 @@ def color_chain(color: dict, fps: int, W: int, H: int, mode: str = "style") -> t
     return fc, note
 
 
-def normalize_clip(clip: dict, color: dict, fps: int, W: int, H: int, out: Path) -> float:
+def normalize_clip(clip: dict, color: dict, fps: int, W: int, H: int, out: Path,
+                   pad_audio: bool = False) -> float:
     src = clip["source"]
     t_in = float(clip["in"])
+    # Normalize the incoming handle too. Pass 2 discards only its video;
+    # retaining the audio keeps B's source time identical after the picture cut.
+    transition = clip.get("transition_in") or {}
+    if transition.get("type") == "j-cut":
+        t_in -= float(transition["duration"])
     dur = round(float(clip["out"]) - t_in, 3)
     mode = (clip.get("grade") or {}).get("mode", "style")  # 默认 style（向后兼容旧 EDL）
     fc, _ = color_chain(color, fps, W, H, mode)
@@ -118,14 +135,63 @@ def normalize_clip(clip: dict, color: dict, fps: int, W: int, H: int, out: Path)
            "-ss", str(t_in), "-i", src]
     if not snd:
         cmd += ["-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000"]
+    if pad_audio:
+        cmd += ["-af", "apad"]
     cmd += ["-filter_complex", fc, "-map", "[outv]",
-            "-map", "0:a" if snd else "1:a",
+            "-map", "0:a:0" if snd else "1:a:0",
             "-t", str(dur), "-shortest",
             "-r", str(fps), "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
             "-pix_fmt", "yuv420p", "-c:a", "aac", "-ar", "48000", "-ac", "2",
             str(out)]
     run(cmd)
     return probe_dur(str(out))
+
+
+def assemble_j_cuts(norms: list[Path], clips: list[dict], fps: int, out: Path) -> None:
+    """Assemble exact picture cuts with incoming audio handles (seconds).
+
+    Trim AAC padding at every boundary. Legacy cut/dissolve overlaps remain
+    unchanged when mixed with J-cuts; a J-cut never shortens the picture track.
+    """
+    cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
+    parts, lengths = [], []
+    for i, (path, clip) in enumerate(zip(norms, clips)):
+        cmd += ["-i", str(path)]
+        t = clip.get("transition_in") or {}
+        lead = float(t["duration"]) if t.get("type") == "j-cut" else 0.0
+        length = edl_mod.clip_duration(clip)
+        lengths.append(length)
+        parts.append(f"[{i}:v]trim=start={lead}:duration={length},"
+                     f"setpts=PTS-STARTPTS,fps={fps},settb=AVTB[v{i}]")
+        parts.append(f"[{i}:a]apad,atrim=duration={length + lead},"
+                     f"asetpts=PTS-STARTPTS[a{i}]")
+    pv, pa, total = "v0", "a0", lengths[0]
+    for i in range(1, len(norms)):
+        t = clips[i].get("transition_in") or {}
+        v, a = f"rawv{i}", f"rawa{i}"
+        if t.get("type") == "j-cut":
+            d = float(t["duration"])
+            parts.append(f"[{pv}][v{i}]concat=n=2:v=1:a=0[{v}]")
+            total += lengths[i]
+        else:
+            d = float(t["duration"]) if t.get("type") == "dissolve" else round(1 / fps, 4)
+            parts.append(f"[{pv}][v{i}]xfade=transition=fade:duration={d}:"
+                         f"offset={round(total - d, 4)}[{v}]")
+            total += lengths[i] - d
+        parts.append(f"[{pa}][a{i}]acrossfade=d={d}:c1=tri:c2=tri[{a}]")
+        # xfade can emit an extra boundary frame (notably FFmpeg 4.4).
+        # Bound every join, so subsequent J-cuts do not inherit that drift.
+        frame_count = round(total * fps)
+        total = frame_count / fps
+        pv, pa = f"joinedv{i}", f"joineda{i}"
+        parts.append(f"[{v}]trim=end_frame={frame_count},setpts=N/({fps}*TB),"
+                     f"fps={fps},settb=AVTB[{pv}]")
+        parts.append(f"[{a}]apad,atrim=duration={total},asetpts=PTS-STARTPTS[{pa}]")
+    cmd += ["-filter_complex", ";".join(parts), "-map", f"[{pv}]", "-map", f"[{pa}]",
+            "-r", str(fps), "-c:v", "libx264", "-preset", "veryfast", "-crf", "19",
+            "-pix_fmt", "yuv420p", "-c:a", "aac", "-ar", "48000", "-ac", "2",
+            "-movflags", "+faststart", str(out)]
+    run(cmd)
 
 
 def assemble(norms: list[Path], durs: list[float], trans: list[dict],
@@ -177,6 +243,14 @@ def render_edl(edl, out_path, workdir=None, log=lambda m: None) -> Path:
     W, H, fps = r["width"], r["height"], r["fps"]
     color = edl.get("color", {})
     clips = edl["clips"]
+    j_cuts = any((c.get("transition_in") or {}).get("type") == "j-cut" for c in clips)
+    # Reject impossible edits before creating intermediate files or output.
+    if j_cuts:
+        for i, c in enumerate(clips):
+            if (c.get("transition_in") or {}).get("type") == "j-cut" and not has_audio(c["source"]):
+                raise ValueError(f"clip[{i}] J-cut 需要后镜头有音轨；请改用 cut")
+            if float(c["out"]) > probe_dur(c["source"]) + 1 / fps:
+                raise ValueError(f"clip[{i}] out 超出素材时长")
     _, note = color_chain(color, fps, W, H)
 
     workdir = Path(workdir or (WORK_DIR / "norm"))
@@ -186,7 +260,19 @@ def render_edl(edl, out_path, workdir=None, log=lambda m: None) -> Path:
     norms, durs, trans = [], [], []
     for i, c in enumerate(clips):
         out_i = workdir / f"norm_{i:03d}.mp4"
-        actual = normalize_clip(c, color, fps, W, H, out_i)
+        actual = normalize_clip(c, color, fps, W, H, out_i, pad_audio=j_cuts)
+        if j_cuts:
+            # Container duration can be extended by a longer audio track. Check
+            # actual decoded video length in the normalized MP4, too.
+            probe = subprocess.run(
+                ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                 "stream=duration", "-of", "csv=p=0", str(out_i)],
+                capture_output=True, text=True, timeout=30, check=True)
+            t = c.get("transition_in") or {}
+            handle = float(t["duration"]) if t.get("type") == "j-cut" else 0.0
+            expected = edl_mod.clip_duration(c) + handle
+            if float(probe.stdout.strip()) < expected - 1e-4:
+                raise ValueError(f"clip[{i}] 视频不足以覆盖 in/out 与 J-cut 余量")
         gmode = (c.get("grade") or {}).get("mode", "style")
         norms.append(out_i)
         durs.append(actual)
@@ -196,7 +282,10 @@ def render_edl(edl, out_path, workdir=None, log=lambda m: None) -> Path:
 
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    assemble(norms, durs, trans, fps, out_path)
+    if j_cuts:
+        assemble_j_cuts(norms, clips, fps, out_path)
+    else:
+        assemble(norms, durs, trans, fps, out_path)
     total = probe_dur(str(out_path))
     log(f"成片 {out_path.name} ({total:.1f}s)")
     return out_path

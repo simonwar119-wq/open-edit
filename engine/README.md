@@ -56,3 +56,50 @@ engine/
 - 转场：硬切用 1 帧 `xfade=fade` 近似（保持单一 xfade 链路），dissolve 用真转场时长。
 - 输入色彩空间假设 Rec.709（手机素材）；log 检测/归一化未实现。
 - `fal.py` 轮询而非 webhook；并发/backpressure 未做（fal 起步并发仅 2）。
+
+## J-cut：声音提前、画面硬切
+
+EDL 的后镜头支持 `"transition_in": {"type": "j-cut", "duration": 0.5}`。
+`duration` 单位为秒，同时表示声音提前量和线性音频交叉淡化时长。
+`in`/`out` 始终是**画面**的源时间；声音从 `in - duration` 开始，
+在画面切点继续与同一源时间的画面同步。J-cut 不缩短画面时间线。
+
+例如 A 的 `in=0, out=2`，B 的 `in=0.5, out=2.5`，B 的 J-cut 为 `0.5`：
+输出为 4 秒；B 的声音从 1.5 秒淡入，2.0 秒硬切到 B 的画面。
+在 24 fps 下，第 47 帧仍是 A，第 48 帧是 B 的源时间 0.5 秒。
+
+已有 EDL 可直接渲染，也可从统一 CLI 指定镜头：
+
+```bash
+python oe.py render edit.edl.json --j-cut c2:0.5 --out film.mp4
+# 多个入转场：追加 --j-cut c3:0.25
+# 已写入 transition_in 的 EDL：python oe.py render edit.edl.json --out film.mp4
+```
+
+CLI 临时覆盖指定 clip id 的入转场，不改写原 EDL，也不移动其画面入出点。
+要保存剪辑决策以重复渲染，把对应 `transition_in` 写回你另存的 EDL。
+当前 `plan`/`make` 的自动导演仍选择原有 cut/dissolve；J-cut 通过 EDL/`render` 显式启用。
+后端使用同一 `render_edl()` 时同样支持此 EDL。
+
+素材和时间约束：
+
+- 后镜头必须有音轨，且 `in >= duration`，以保留实际源声音余量；首镜不能设 J-cut。
+- 提前量必须是有限正数，小于前镜头可用画面时长；前镜头有入叠化时扣除该叠化时长。
+- 含 J-cut 的 EDL，其画面 in/out、J-cut 与叠化时长必须对齐输出帧边界；例如 24 fps 的 0.5 秒为 12 帧。
+- 后镜头无音轨会报错，请使用普通 cut。前镜头无音轨或音轨较短会用静音补齐，不提前结束画面。
+- 支持连续 J-cut 及与 cut/dissolve 混用；不含 J-cut 的 EDL 保留原有组接路径。
+- 本版本把提前量与淡化时长绑定，尚不支持独立音频偏移或 L-cut。
+
+来源：SeedanceCheap / @pesoszpesosz 的 [PR #4](https://github.com/simonwar119-wq/open-edit/pull/4)
+提供了正确保留源音频余量的配方。App 渲染、校验与 CLI 集成另行实现。
+[PR #5](https://github.com/simonwar119-wq/open-edit/pull/5) 指出了 LUT 路径的两层解析问题；
+当前实现同时转义选项与 filtergraph，并以实际像素回归覆盖 100%/70% LUT 强度。
+
+离线测试（需 Python 3.11+、带 libx264/eq/lut3d 的 FFmpeg 和 ffprobe；CLI 测试还需 httpx）：
+
+```bash
+python -m unittest engine.test_render -v
+```
+
+测试不访问生成服务，子进程有超时，解码检查画面、帧数、音轨时长和声音频率。
+测试结果与平台限制见 [integration-validation.md](integration-validation.md)。

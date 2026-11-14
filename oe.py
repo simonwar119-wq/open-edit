@@ -107,7 +107,9 @@ def cmd_plan(args):
 
 def cmd_render(args):
     out = args.out or str(WORK_DIR / "oe_render.mp4")
-    render_edl(args.edl, out, log=lambda m: log("  " + m))
+    edl = edl_mod.load(args.edl)
+    edl_mod.set_j_cuts(edl, args.j_cut)
+    render_edl(edl, out, log=lambda m: log("  " + m))
     final, subi, musi = _post(out, args)
     emit({"output": final, "duration_s": probe_duration(final), "subtitles": subi, "music": musi})
 
@@ -240,6 +242,8 @@ def main():
 
     pr = sub.add_parser("render")
     pr.add_argument("edl")
+    pr.add_argument("--j-cut", action="append", default=[], metavar="CLIP_ID:SECONDS",
+                    help="后镜头声音提前进入，例如 c2:0.5；需要 in 前有音频余量，可重复")
     pr.add_argument("--out", default=None)
     pr.add_argument("--subtitles", action="store_true")
     pr.add_argument("--lang", default=None)
